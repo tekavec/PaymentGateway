@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  acquirer:
+    image: jamesdbloom/mockserver
+    ports:
+      - 1080:1080
+    environment:
+      - LOG_LEVEL=INFO
+      - jvmOptions=-Dmockserver.initializationJsonPath=/config/mock-acquirer-setup.json
+    volumes:
+      - ./config:/config

@@ -1,0 +1,10 @@
+[
+  {
+    "httpRequest": {
+      "path": "/processpayment"
+    },
+    "httpResponse": {
+      "body": "some first response"
+    }
+  }
+]

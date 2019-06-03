@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  test:
+    image: mcr.microsoft.com/dotnet/core/sdk:2.2
+    depends_on: 
+      - acquirer
+    working_dir: /opt/workspace
+    volumes:
+      - ./:/opt/workspace
+    command: bash -c "dotnet test --output tmp/build -c Release --logger trx"

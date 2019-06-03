@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using PaymentGateway.Controllers;
 using PaymentGateway.Models;
 using Xunit;
@@ -13,9 +14,11 @@ namespace PaymentGateway.Tests.Controllers
 
         private readonly PaymentController paymentController;
 
+        private readonly Mock<IProcessPaymentService> processPaymentService = new Mock<IProcessPaymentService>();
+
         public PaymentControllerShould()
         {
-            paymentController = new PaymentController
+            paymentController = new PaymentController(processPaymentService.Object)
             {
                 ControllerContext = controllerContext
             };

@@ -5,7 +5,14 @@ VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway", "src\PaymentGateway\PaymentGateway.csproj", "{D3F84A2C-C2EE-4C84-961C-3B5715966BA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Tests", "test\PaymentGateway.Tests\PaymentGateway.Tests.csproj", "{65221893-8CE7-4559-9A83-DC3F41EDDEF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Tests", "test\PaymentGateway.Tests\PaymentGateway.Tests.csproj", "{65221893-8CE7-4559-9A83-DC3F41EDDEF4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{EFAD878C-DF67-45DA-B198-FD0E85DDEBC6}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.test.yml = docker-compose.test.yml
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
