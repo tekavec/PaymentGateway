@@ -4,8 +4,8 @@ using PaymentGateway.Models;
 
 namespace PaymentGateway.Domain.ProcessPayment
 {
-    public interface IProcessPaymentService
+    public interface IRetrievePaymentService
     {
-        Task<Guid> Process(MakePaymentV1 model);
+        Task<PaymentDetails> Get(Guid id);
     }
 }

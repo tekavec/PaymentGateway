@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Models;
 
 namespace PaymentGateway.Controllers
@@ -8,10 +10,12 @@ namespace PaymentGateway.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IProcessPaymentService processPaymentService;
+        private readonly IRetrievePaymentService retrievePaymentService;
 
-        public PaymentController(IProcessPaymentService processPaymentService)
+        public PaymentController(IProcessPaymentService processPaymentService, IRetrievePaymentService retrievePaymentService)
         {
             this.processPaymentService = processPaymentService;
+            this.retrievePaymentService = retrievePaymentService;
         }
 
         [HttpPost]
@@ -20,7 +24,14 @@ namespace PaymentGateway.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok();
+            var id = await processPaymentService.Process(model);
+
+            return new CreatedResult("get", id);
+        }
+
+        public async Task<IActionResult> GetPaymentDetails(Guid id)
+        {
+            return Ok(await retrievePaymentService.Get(id));
         }
     }
 }
