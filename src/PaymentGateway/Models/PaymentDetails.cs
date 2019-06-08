@@ -5,6 +5,7 @@ namespace PaymentGateway.Models
     public sealed class PaymentDetails
     {
         public PaymentDetails(
+            Guid paymentId,
             string cardHolder,
             string cardNumber,
             int expiryYear,
@@ -12,6 +13,7 @@ namespace PaymentGateway.Models
             string processedStatus,
             DateTime processedAt)
         {
+            PaymentId = paymentId;
             CardHolder = cardHolder;
             CardNumber = cardNumber;
             ExpiryYear = expiryYear;
@@ -20,6 +22,7 @@ namespace PaymentGateway.Models
             ProcessedAt = processedAt;
         }
 
+        public Guid PaymentId { get; }
         public string CardHolder { get; }
         public string CardNumber { get; }
         public int ExpiryYear { get; }

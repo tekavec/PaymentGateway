@@ -6,8 +6,10 @@ using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Models;
 using System;
 using System.Threading.Tasks;
+using LaYumba.Functional;
 using PaymentGateway.Domain.RetrievePayment;
 using Xunit;
+using static PaymentGateway.Tests.Fakes;
 
 namespace PaymentGateway.Tests.Controllers
 {
@@ -15,8 +17,12 @@ namespace PaymentGateway.Tests.Controllers
     {
         private readonly TestControllerContext controllerContext = new TestControllerContext();
         private readonly PaymentController paymentController;
-        private readonly Mock<IProcessPaymentService> processPaymentService = new Mock<IProcessPaymentService>(MockBehavior.Strict);
-        private readonly Mock<IRetrievePaymentService> retrievePaymentService = new Mock<IRetrievePaymentService>(MockBehavior.Strict);
+
+        private readonly Mock<IProcessPaymentService> processPaymentService =
+            new Mock<IProcessPaymentService>(MockBehavior.Strict);
+
+        private readonly Mock<IRetrievePaymentService> retrievePaymentService =
+            new Mock<IRetrievePaymentService>(MockBehavior.Strict);
 
         public PaymentControllerShould()
         {
@@ -36,7 +42,7 @@ namespace PaymentGateway.Tests.Controllers
 
             result.Should().BeOfType<CreatedResult>();
         }
-        
+
         [Fact]
         public async Task return_result_of_processed_payment_when_payment_successfully_processed()
         {
@@ -48,7 +54,7 @@ namespace PaymentGateway.Tests.Controllers
 
             result.Value.Should().Be(transactionId);
         }
-        
+
         [Fact]
         public async Task return_bad_request_for_invalid_input_payment_data()
         {
@@ -62,7 +68,7 @@ namespace PaymentGateway.Tests.Controllers
         [Fact]
         public async Task return_ok_when_payment_successfully_retrieved()
         {
-            retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(It.IsAny<PaymentDetails>());
+            retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(It.IsAny<Option<PaymentDetails>>());
 
             var result = await paymentController.GetPaymentDetails(Guid.NewGuid());
 
@@ -73,17 +79,14 @@ namespace PaymentGateway.Tests.Controllers
 
         public async Task return_payment_details_for_a_given_payment_identifier()
         {
-            var paymentDetails = CreatePaymentDetails();
-            retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(paymentDetails);
+            var paymentId = Guid.NewGuid();
+            var paymentDetails = CreatePaymentDetails(paymentId);
+            retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(paymentDetails);
 
-            var result = await paymentController.GetPaymentDetails(Guid.NewGuid()) as OkObjectResult;
+            var result = await paymentController.GetPaymentDetails(paymentId) as OkObjectResult;
 
-            result.Value.Should().BeOfType<PaymentDetails>();
+            result.Value.Should().BeOfType<Option<PaymentDetails>>();
             result.Value.Should().Be(paymentDetails);
         }
-
-        private static PaymentDetails CreatePaymentDetails() =>
-            new PaymentDetails("a holder", "a card number", 2029, 12, "Success", DateTime.Now);
-
     }
 }
