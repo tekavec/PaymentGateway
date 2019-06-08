@@ -6,6 +6,7 @@ using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Models;
 using System;
 using System.Threading.Tasks;
+using PaymentGateway.Domain.RetrievePayment;
 using Xunit;
 
 namespace PaymentGateway.Tests.Controllers
@@ -28,7 +29,8 @@ namespace PaymentGateway.Tests.Controllers
         [Fact]
         public async Task return_created_at_result_when_payment_successfully_processed()
         {
-            processPaymentService.Setup(a => a.Process(It.IsAny<MakePaymentV1>())).ReturnsAsync(Guid.NewGuid());
+            processPaymentService.Setup(a => a.Process(It.IsAny<MakePaymentV1>()))
+                .ReturnsAsync(PaymentProcessingResult.CreateSuccessfulResult(Guid.NewGuid()));
 
             var result = await paymentController.ProcessPayment(new MakePaymentV1());
 
@@ -39,7 +41,8 @@ namespace PaymentGateway.Tests.Controllers
         public async Task return_result_of_processed_payment_when_payment_successfully_processed()
         {
             var transactionId = Guid.NewGuid();
-            processPaymentService.Setup(a => a.Process(It.IsAny<MakePaymentV1>())).ReturnsAsync(transactionId);
+            processPaymentService.Setup(a => a.Process(It.IsAny<MakePaymentV1>()))
+                .ReturnsAsync(PaymentProcessingResult.CreateSuccessfulResult(transactionId));
 
             var result = await paymentController.ProcessPayment(new MakePaymentV1()) as CreatedResult;
 
@@ -67,6 +70,7 @@ namespace PaymentGateway.Tests.Controllers
         }
 
         [Fact]
+
         public async Task return_payment_details_for_a_given_payment_identifier()
         {
             var paymentDetails = CreatePaymentDetails();
@@ -78,7 +82,8 @@ namespace PaymentGateway.Tests.Controllers
             result.Value.Should().Be(paymentDetails);
         }
 
-        private PaymentDetails CreatePaymentDetails() =>
+        private static PaymentDetails CreatePaymentDetails() =>
             new PaymentDetails("a holder", "a card number", 2029, 12, "Success", DateTime.Now);
+
     }
 }

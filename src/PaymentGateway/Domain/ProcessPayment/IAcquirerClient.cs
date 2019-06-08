@@ -3,8 +3,8 @@ using PaymentGateway.Models;
 
 namespace PaymentGateway.Domain.ProcessPayment
 {
-    public interface IProcessPaymentService
+    public interface IAcquirerClient
     {
-        Task<PaymentProcessingResult> Process(MakePaymentV1 model);
+        Task<PaymentProcessingResult> ProcessPayment(MakePaymentV1 makePayment);
     }
 }

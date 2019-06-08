@@ -27,5 +27,4 @@ namespace PaymentGateway.Models
         public string ProcessedStatus { get; }
         public DateTime ProcessedAt { get; }
     }
-
 }

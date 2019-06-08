@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using PaymentGateway.Models;
 
-namespace PaymentGateway.Domain.ProcessPayment
+namespace PaymentGateway.Domain.RetrievePayment
 {
     public interface IRetrievePaymentService
     {
