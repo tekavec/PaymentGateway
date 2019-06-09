@@ -4,23 +4,13 @@ namespace PaymentGateway.Domain.ProcessPayment
 {
     public struct PaymentProcessingResult
     {
-        private PaymentProcessingResult(Guid paymentId, PaymentProcessStatus status)
+        public PaymentProcessingResult(Guid key, PaymentProcessStatus status)
         {
-            PaymentId = paymentId;
+            Key = key;
             Status = status;
         }
 
-        public static PaymentProcessingResult CreateSuccessfulResult(Guid paymentId)
-        {
-            return new PaymentProcessingResult(paymentId, PaymentProcessStatus.Succeeded);
-        }
-
-        public static PaymentProcessingResult CreateFailedResult(Guid paymentId)
-        {
-            return new PaymentProcessingResult(paymentId, PaymentProcessStatus.Failed);
-        }
-
-        public Guid PaymentId { get; }
+        public Guid Key { get; }
         public PaymentProcessStatus Status { get; }
     }
 }

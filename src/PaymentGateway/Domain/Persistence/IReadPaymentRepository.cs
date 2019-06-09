@@ -7,15 +7,6 @@ namespace PaymentGateway.Domain.Persistence
 {
     public interface IReadPaymentRepository
     {
-        Task<Option<PaymentDetails>> Read(Guid id);
-    }
-
-    public interface ISavePaymentRepository
-    {
-        Task<CreatePaymentDetails> Save();
-    }
-
-    public class CreatePaymentDetails
-    {
+        Task<Option<PaymentDetails>> Read(Guid key);
     }
 }

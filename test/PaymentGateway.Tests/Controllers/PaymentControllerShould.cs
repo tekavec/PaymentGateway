@@ -36,7 +36,7 @@ namespace PaymentGateway.Tests.Controllers
         public async Task return_created_at_result_when_payment_successfully_processed()
         {
             processPaymentService.Setup(a => a.Process(It.IsAny<MakePaymentV1>()))
-                .ReturnsAsync(PaymentProcessingResult.CreateSuccessfulResult(Guid.NewGuid()));
+                .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(Guid.NewGuid()));
 
             var result = await paymentController.ProcessPayment(new MakePaymentV1());
 
@@ -48,7 +48,7 @@ namespace PaymentGateway.Tests.Controllers
         {
             var transactionId = Guid.NewGuid();
             processPaymentService.Setup(a => a.Process(It.IsAny<MakePaymentV1>()))
-                .ReturnsAsync(PaymentProcessingResult.CreateSuccessfulResult(transactionId));
+                .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(transactionId));
 
             var result = await paymentController.ProcessPayment(new MakePaymentV1()) as CreatedResult;
 

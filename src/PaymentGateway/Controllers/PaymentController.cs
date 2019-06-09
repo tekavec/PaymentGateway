@@ -27,7 +27,7 @@ namespace PaymentGateway.Controllers
 
             var paymentProcessingResult = await processPaymentService.Process(model);
 
-            return new CreatedResult("get", paymentProcessingResult.PaymentId);
+            return new CreatedResult("get", paymentProcessingResult.Key);
         }
 
         [HttpGet]

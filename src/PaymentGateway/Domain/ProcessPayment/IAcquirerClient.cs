@@ -5,6 +5,6 @@ namespace PaymentGateway.Domain.ProcessPayment
 {
     public interface IAcquirerClient
     {
-        Task<PaymentProcessingResult> ProcessPayment(MakePaymentV1 makePayment);
+        Task<AcquirerProcessingResult> ProcessPayment(MakePaymentV1 makePayment);
     }
 }
