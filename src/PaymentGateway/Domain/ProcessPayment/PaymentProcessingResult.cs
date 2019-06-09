@@ -4,13 +4,13 @@ namespace PaymentGateway.Domain.ProcessPayment
 {
     public struct PaymentProcessingResult
     {
-        public PaymentProcessingResult(Guid key, PaymentProcessStatus status)
+        public PaymentProcessingResult(Guid key, bool status)
         {
             Key = key;
             Status = status;
         }
 
         public Guid Key { get; }
-        public PaymentProcessStatus Status { get; }
+        public bool Status { get; }
     }
 }

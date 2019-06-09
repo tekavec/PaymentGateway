@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquirer.Client", "src\Acquirer.Client\Acquirer.Client.csproj", "{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquirer.Client.UnitTests", "test\Acquirer.Client.UnitTests\Acquirer.Client.UnitTests.csproj", "{056373EF-8A33-46CE-B281-4559A1E12C5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +32,14 @@ Global
 		{65221893-8CE7-4559-9A83-DC3F41EDDEF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65221893-8CE7-4559-9A83-DC3F41EDDEF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65221893-8CE7-4559-9A83-DC3F41EDDEF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{056373EF-8A33-46CE-B281-4559A1E12C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{056373EF-8A33-46CE-B281-4559A1E12C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{056373EF-8A33-46CE-B281-4559A1E12C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{056373EF-8A33-46CE-B281-4559A1E12C5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

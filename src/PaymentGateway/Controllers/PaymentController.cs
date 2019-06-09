@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Acquirer.Client.Domain;
 using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
@@ -24,8 +25,15 @@ namespace PaymentGateway.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var paymentProcessingResult = await processPaymentService.Process(model);
+            var createPayment = new CreatePayment(
+                model.CardHolder,
+                model.CardNumber,
+                model.Cvv,
+                model.ExpiryYear,
+                model.ExpiryMonth,
+                model.Amount,
+                model.Currency);
+            var paymentProcessingResult = await processPaymentService.Process(createPayment);
 
             return new CreatedResult("get", paymentProcessingResult.Key);
         }

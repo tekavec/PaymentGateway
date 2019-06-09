@@ -30,24 +30,21 @@ namespace PaymentGateway.Domain.Persistence
                 paymentEntity.CardNumber,
                 paymentEntity.ExpiryYear,
                 paymentEntity.ExpiryMonth,
-                paymentEntity.ProcessedStatus,
-                paymentEntity.ProcessedAt));
+                paymentEntity.ProcessedStatus));
         }
 
-        public async Task<SavePaymentResult> Save(NewPayment newPayment)
+        public async Task<SavePaymentResult> Save(ProcessedPayment processedPayment)
         {
             var paymentEntity = new PaymentEntity(
                 identityGenerator.NewId,
-                newPayment.CardHolder,
-                newPayment.CardNumber,
-                newPayment.ExpiryYear,
-                newPayment.ExpiryMonth,
-                newPayment.Amount,
-                newPayment.Currency,
-                newPayment.AcquirerPaymentId,
-                newPayment.ProcessedStatus,
-                newPayment.ProcessedAt
-                );
+                processedPayment.CardHolder,
+                processedPayment.CardNumber,
+                processedPayment.ExpiryYear,
+                processedPayment.ExpiryMonth,
+                processedPayment.Amount,
+                processedPayment.Currency,
+                processedPayment.AcquirerPaymentId,
+                processedPayment.ProcessedStatus);
             cache.Add(paymentEntity.Key, paymentEntity);
             return new SavePaymentResult(paymentEntity.Key);
         }

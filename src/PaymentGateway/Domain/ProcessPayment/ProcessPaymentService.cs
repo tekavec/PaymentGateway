@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Acquirer.Client;
+using Acquirer.Client.Domain;
 using PaymentGateway.Domain.Persistence;
-using PaymentGateway.Models;
 
 namespace PaymentGateway.Domain.ProcessPayment
 {
@@ -17,21 +19,21 @@ namespace PaymentGateway.Domain.ProcessPayment
             this.savePaymentRepository = savePaymentRepository;
         }
 
-        public async Task<PaymentProcessingResult> Process(MakePaymentV1 makePayment)
+        public async Task<PaymentProcessingResult> Process(CreatePayment createPayment)
         {
-            var acquirerProcessingResult = await acquirerClient.ProcessPayment(makePayment);
+            var uri = new Uri("http://localhost");
+            var acquirerProcessingResult = await acquirerClient.ProcessPayment(createPayment, uri);
             var savePaymentResult = await savePaymentRepository.Save(
-                new NewPayment(
-                    makePayment.CardHolder,
-                    makePayment.CardNumber,
-                    makePayment.ExpiryYear,
-                    makePayment.ExpiryMonth,
-                    makePayment.Amount,
-                    makePayment.Currency,
+                new ProcessedPayment(
+                    createPayment.CardHolder,
+                    createPayment.CardNumber,
+                    createPayment.ExpiryYear,
+                    createPayment.ExpiryMonth,
+                    createPayment.Amount,
+                    createPayment.Currency,
                     acquirerProcessingResult.AcquirerPaymentId,
-                    acquirerProcessingResult.Status.ToString(),
-                    acquirerProcessingResult.ProcessedAt));
-            return new PaymentProcessingResult(savePaymentResult.Key, acquirerProcessingResult.Status);
+                    acquirerProcessingResult.IsPaymentSuccessful));
+            return new PaymentProcessingResult(savePaymentResult.Key, acquirerProcessingResult.IsPaymentSuccessful);
         }
     }
 }

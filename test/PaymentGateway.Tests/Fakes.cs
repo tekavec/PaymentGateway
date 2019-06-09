@@ -1,4 +1,5 @@
 ﻿using System;
+using Acquirer.Client.Domain;
 using LaYumba.Functional;
 using PaymentGateway.Domain;
 using PaymentGateway.Domain.ProcessPayment;
@@ -17,31 +18,39 @@ namespace PaymentGateway.Tests
                     "a card number",
                     2029,
                     12,
-                    "Success",
-                    DateTime.Now));
+                    true));
 
         public static PaymentProcessingResult CreateSuccessfulPaymentProcessingResult(Guid key)
-            => new PaymentProcessingResult(key, PaymentProcessStatus.Succeeded);
+            => new PaymentProcessingResult(key, true);
 
         public static PaymentProcessingResult CreateUnsuccessfulPaymentProcessingResult(Guid key)
-            => new PaymentProcessingResult(key, PaymentProcessStatus.Failed);
+            => new PaymentProcessingResult(key, false);
 
-        public static AcquirerProcessingResult CreateSuccessfulAcquirerProcessingResult(string acquirerPaymentId)
-            => new AcquirerProcessingResult(acquirerPaymentId, PaymentProcessStatus.Succeeded, DateTime.Now);
+        public static AcquirerProcessingResult CreateSuccessfulAcquirerProcessingResult(Guid acquirerPaymentId)
+            => new AcquirerProcessingResult(acquirerPaymentId, true);
 
-        public static AcquirerProcessingResult CreateUnsuccessfulAcquirerProcessingResult(string acquirerPaymentId)
-            => new AcquirerProcessingResult(acquirerPaymentId, PaymentProcessStatus.Failed, DateTime.Now);
+        public static AcquirerProcessingResult CreateUnsuccessfulAcquirerProcessingResult(Guid acquirerPaymentId)
+            => new AcquirerProcessingResult(acquirerPaymentId, false);
 
-        public static NewPayment CreateNewPayment()
-            => new NewPayment(
+        public static ProcessedPayment CreateNewPayment()
+            => new ProcessedPayment(
                 cardHolder: "a card holder",
                 cardNumber: "a card number",
                 expiryYear: 2029,
                 expiryMonth: 12,
                 amount: 12345.67m,
                 currency: "GBP",
-                acquirerPaymentId: Guid.NewGuid().ToString(),
-                processedStatus: "Success",
-                processedAt: DateTime.Now);
+                acquirerPaymentId: Guid.NewGuid(),
+                processedStatus: true);
+
+        public static CreatePayment GetCreatePayment()
+            => new CreatePayment(
+                cardHolder: "a card holder",
+                cardNumber: "a card number",
+                cvv: "123",
+                expiryYear: 2029,
+                expiryMonth: 12,
+                amount: 12345.67m,
+                currency: "GBP");
     }
 }

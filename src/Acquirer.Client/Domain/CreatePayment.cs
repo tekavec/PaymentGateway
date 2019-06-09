@@ -1,39 +1,31 @@
-﻿using System;
-
-namespace PaymentGateway.Models
+﻿namespace Acquirer.Client.Domain
 {
-    public class NewPayment
+    public sealed class CreatePayment
     {
-        public NewPayment(
+        public CreatePayment(
             string cardHolder,
             string cardNumber,
+            string cvv,
             int expiryYear,
             int expiryMonth,
             decimal amount,
-            string currency,
-            string acquirerPaymentId,
-            string processedStatus,
-            DateTime processedAt)
+            string currency)
         {
             CardHolder = cardHolder;
             CardNumber = cardNumber;
+            Cvv = cvv;
             ExpiryYear = expiryYear;
             ExpiryMonth = expiryMonth;
             Amount = amount;
             Currency = currency;
-            AcquirerPaymentId = acquirerPaymentId;
-            ProcessedStatus = processedStatus;
-            ProcessedAt = processedAt;
         }
 
         public string CardHolder { get; }
         public string CardNumber { get; }
+        public string Cvv { get; }
         public int ExpiryYear { get; }
         public int ExpiryMonth { get; }
         public decimal Amount { get; set; }
         public string Currency { get; set; }
-        public string AcquirerPaymentId { get; }
-        public string ProcessedStatus { get; }
-        public DateTime ProcessedAt { get; }
     }
 }

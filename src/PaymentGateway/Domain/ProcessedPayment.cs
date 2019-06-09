@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace PaymentGateway.Domain.Persistence
+namespace PaymentGateway.Domain
 {
-    public class PaymentEntity : Entity<Guid>
+    public class ProcessedPayment
     {
-        public PaymentEntity(
-            Guid key,
+        public ProcessedPayment(
             string cardHolder,
             string cardNumber,
             int expiryYear,
@@ -15,7 +14,6 @@ namespace PaymentGateway.Domain.Persistence
             Guid acquirerPaymentId,
             bool processedStatus)
         {
-            Key = key;
             CardHolder = cardHolder;
             CardNumber = cardNumber;
             ExpiryYear = expiryYear;
@@ -26,7 +24,6 @@ namespace PaymentGateway.Domain.Persistence
             ProcessedStatus = processedStatus;
         }
 
-        public override Guid Key { get; }
         public string CardHolder { get; }
         public string CardNumber { get; }
         public int ExpiryYear { get; }

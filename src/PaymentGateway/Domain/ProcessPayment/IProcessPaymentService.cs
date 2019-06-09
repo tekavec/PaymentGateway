@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using PaymentGateway.Models;
+using Acquirer.Client.Domain;
 
 namespace PaymentGateway.Domain.ProcessPayment
 {
     public interface IProcessPaymentService
     {
-        Task<PaymentProcessingResult> Process(MakePaymentV1 model);
+        Task<PaymentProcessingResult> Process(CreatePayment createPayment);
     }
 }

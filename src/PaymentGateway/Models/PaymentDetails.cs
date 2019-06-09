@@ -10,8 +10,7 @@ namespace PaymentGateway.Models
             string cardNumber,
             int expiryYear,
             int expiryMonth,
-            string processedStatus,
-            DateTime processedAt)
+            bool processedStatus)
         {
             Key = key;
             CardHolder = cardHolder;
@@ -19,7 +18,6 @@ namespace PaymentGateway.Models
             ExpiryYear = expiryYear;
             ExpiryMonth = expiryMonth;
             ProcessedStatus = processedStatus;
-            ProcessedAt = processedAt;
         }
 
         public Guid Key { get; }
@@ -27,7 +25,6 @@ namespace PaymentGateway.Models
         public string CardNumber { get; }
         public int ExpiryYear { get; }
         public int ExpiryMonth { get; }
-        public string ProcessedStatus { get; }
-        public DateTime ProcessedAt { get; }
+        public bool ProcessedStatus { get; }
     }
 }
