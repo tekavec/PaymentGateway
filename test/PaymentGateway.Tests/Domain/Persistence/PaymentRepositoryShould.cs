@@ -5,6 +5,7 @@ using LaYumba.Functional;
 using Moq;
 using PaymentGateway.Domain.Persistence;
 using Xunit;
+using Xunit.Sdk;
 using static PaymentGateway.Tests.Fakes;
 
 namespace PaymentGateway.Tests.Domain.Persistence
@@ -30,7 +31,7 @@ namespace PaymentGateway.Tests.Domain.Persistence
             var result = await paymentRepository.Read(id);
 
             result.Match(
-                None: () => throw new ApplicationException("Result shouldn't be None."),
+                None: () => throw new XunitException("Result shouldn't be None."),
                 Some: paymentDetails => paymentDetails.Key.Should().Be(id));
         }
 
@@ -41,7 +42,7 @@ namespace PaymentGateway.Tests.Domain.Persistence
 
             result.Match(
                 None: () => {},
-                Some: _ => throw new ApplicationException("Result should be None."));
+                Some: _ => throw new XunitException("Result should be None."));
         }
     }
 }

@@ -20,7 +20,13 @@ namespace Acquirer.Client.UnitTests
                 ResponseMessage = new HttpResponseMessage()
             };
 
-            acquirerClient = new AcquirerClient(new HttpClient(httpMessageHandler));
+            var httpClient = new HttpClient(httpMessageHandler)
+            {
+                BaseAddress = new Uri("http://localhost")
+            };
+
+            acquirerClient = new AcquirerClient(
+                httpClient);
         }
 
         [Fact]
