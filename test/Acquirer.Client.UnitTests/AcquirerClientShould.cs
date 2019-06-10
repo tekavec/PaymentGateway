@@ -34,9 +34,7 @@ namespace Acquirer.Client.UnitTests
                 }
             ");
 
-            var result = await acquirerClient.ProcessPayment(
-                createPayment, 
-                new Uri("http://acquirer/createpayment"));
+            var result = await acquirerClient.ProcessPayment(createPayment);
 
             result.AcquirerPaymentId.Should().Be(new Guid("A058E3B1-0163-4A5A-9A28-D53DC5B9FF15"));
             result.IsPaymentSuccessful.Should().Be(true);
@@ -53,9 +51,7 @@ namespace Acquirer.Client.UnitTests
                 }
             ");
 
-            var result = await acquirerClient.ProcessPayment(
-                createPayment, 
-                new Uri("http://acquirer/createpayment"));
+            var result = await acquirerClient.ProcessPayment(createPayment);
 
             result.AcquirerPaymentId.Should().Be(new Guid("B112F772-BF9A-457C-AB0F-DD6C3C32F436"));
             result.IsPaymentSuccessful.Should().Be(false);
@@ -70,9 +66,7 @@ namespace Acquirer.Client.UnitTests
             var createPayment = GetCreatePayment();
             httpMessageHandler.ResponseMessage = new HttpResponseMessage(statusCode);
 
-            var result = await acquirerClient.ProcessPayment(
-                createPayment, 
-                new Uri("http://acquirer/createpayment"));
+            var result = await acquirerClient.ProcessPayment(createPayment);
 
             result.AcquirerPaymentId.Should().Be(Guid.Empty);
             result.IsPaymentSuccessful.Should().Be(false);

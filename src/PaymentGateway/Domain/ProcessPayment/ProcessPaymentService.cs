@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Acquirer.Client;
 using Acquirer.Client.Domain;
 using PaymentGateway.Domain.Persistence;
@@ -21,8 +20,7 @@ namespace PaymentGateway.Domain.ProcessPayment
 
         public async Task<PaymentProcessingResult> Process(CreatePayment createPayment)
         {
-            var uri = new Uri("http://localhost");
-            var acquirerProcessingResult = await acquirerClient.ProcessPayment(createPayment, uri);
+            var acquirerProcessingResult = await acquirerClient.ProcessPayment(createPayment);
             var savePaymentResult = await savePaymentRepository.Save(
                 new ProcessedPayment(
                     createPayment.CardHolder,

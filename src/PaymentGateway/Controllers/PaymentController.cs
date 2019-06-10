@@ -8,6 +8,7 @@ using PaymentGateway.Models;
 
 namespace PaymentGateway.Controllers
 {
+    [ApiController]
     [Route("payment")]
     public class PaymentController : ControllerBase
     {
@@ -21,7 +22,7 @@ namespace PaymentGateway.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProcessPayment([FromBody] MakePaymentV1 model)
+        public async Task<IActionResult> Post([FromBody] MakePaymentV1 model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -38,8 +39,8 @@ namespace PaymentGateway.Controllers
             return new CreatedResult("get", paymentProcessingResult.Key);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPaymentDetails(Guid id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
         {
             return Ok(await retrievePaymentService.Get(id));
         }

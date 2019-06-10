@@ -39,7 +39,7 @@ namespace PaymentGateway.Tests.Controllers
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>()))
                 .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(Guid.NewGuid()));
 
-            var result = await paymentController.ProcessPayment(new MakePaymentV1());
+            var result = await paymentController.Post(new MakePaymentV1());
 
             result.Should().BeOfType<CreatedResult>();
         }
@@ -51,7 +51,7 @@ namespace PaymentGateway.Tests.Controllers
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>()))
                 .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(transactionId));
 
-            var result = await paymentController.ProcessPayment(new MakePaymentV1()) as CreatedResult;
+            var result = await paymentController.Post(new MakePaymentV1()) as CreatedResult;
 
             result.Value.Should().Be(transactionId);
         }
@@ -61,7 +61,7 @@ namespace PaymentGateway.Tests.Controllers
         {
             controllerContext.ModelState.AddModelError("Request", "Invalid");
 
-            var result = await paymentController.ProcessPayment(new MakePaymentV1());
+            var result = await paymentController.Post(new MakePaymentV1());
 
             result.Should().BeOfType<BadRequestObjectResult>();
         }
@@ -71,7 +71,7 @@ namespace PaymentGateway.Tests.Controllers
         {
             retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(It.IsAny<Option<PaymentDetails>>());
 
-            var result = await paymentController.GetPaymentDetails(Guid.NewGuid());
+            var result = await paymentController.Get(Guid.NewGuid());
 
             result.Should().BeOfType<OkObjectResult>();
         }
@@ -84,7 +84,7 @@ namespace PaymentGateway.Tests.Controllers
             var paymentDetails = CreatePaymentDetails(paymentId);
             retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(paymentDetails);
 
-            var result = await paymentController.GetPaymentDetails(paymentId) as OkObjectResult;
+            var result = await paymentController.Get(paymentId) as OkObjectResult;
 
             result.Value.Should().BeOfType<Option<PaymentDetails>>();
             result.Value.Should().Be(paymentDetails);

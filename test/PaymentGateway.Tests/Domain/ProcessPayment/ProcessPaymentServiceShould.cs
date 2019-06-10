@@ -30,7 +30,7 @@ namespace PaymentGateway.Tests.Domain.ProcessPayment
         {
             var acquirerPaymentId = Guid.NewGuid();
             var savePaymentResult = new SavePaymentResult(Guid.NewGuid());
-            acquirerClient.Setup(a => a.ProcessPayment(It.IsAny<CreatePayment>(), It.IsAny<Uri>()))
+            acquirerClient.Setup(a => a.ProcessPayment(It.IsAny<CreatePayment>()))
                 .ReturnsAsync(CreateSuccessfulAcquirerProcessingResult(acquirerPaymentId));
             savePaymentRepository.Setup(a => a.Save(It.IsAny<ProcessedPayment>()))
                 .ReturnsAsync(savePaymentResult);
@@ -47,7 +47,7 @@ namespace PaymentGateway.Tests.Domain.ProcessPayment
         {
             var acquirerPaymentId = Guid.NewGuid();
             var savePaymentResult = new SavePaymentResult(Guid.NewGuid());
-            acquirerClient.Setup(a => a.ProcessPayment(It.IsAny<CreatePayment>(), It.IsAny<Uri>()))
+            acquirerClient.Setup(a => a.ProcessPayment(It.IsAny<CreatePayment>()))
                 .ReturnsAsync(CreateUnsuccessfulAcquirerProcessingResult(acquirerPaymentId));
             savePaymentRepository.Setup(a => a.Save(It.IsAny<ProcessedPayment>()))
                 .ReturnsAsync(savePaymentResult);

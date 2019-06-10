@@ -2,9 +2,10 @@ version: '2'
 
 services:
   acquirer:
-    image: jamesdbloom/mockserver
+    image: jordimartin/mmock
     ports:
-      - 1080:1080
+      - 8082:8082
+      - 8083:8083
     environment:
       - LOG_LEVEL=INFO
       - jvmOptions=-Dmockserver.initializationJsonPath=/config/mock-acquirer-setup.json

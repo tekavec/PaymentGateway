@@ -18,7 +18,7 @@ namespace Acquirer.Client
             this.httpClient = httpClient;
         }
 
-        public async Task<AcquirerProcessingResult> ProcessPayment(CreatePayment createPayment, Uri acquirerUri)
+        public async Task<AcquirerProcessingResult> ProcessPayment(CreatePayment createPayment)
         {
             var acquirerPayment = new AcquirerPaymentDto
             {
@@ -30,16 +30,27 @@ namespace Acquirer.Client
                 Amount = createPayment.Amount,
                 Currency = createPayment.Currency
             };
-            var json = JsonConvert.SerializeObject(acquirerPayment, DefaultJsonSerializerSetting());
-            var paymentContent = new StringContent(json, Encoding.UTF8);
-            var response = await httpClient.PostAsync(acquirerUri, paymentContent);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var acquirerResponse =
-                    JsonConvert.DeserializeObject<AcquirerResponseDto>(responseJson, DefaultJsonSerializerSetting());
-                return new AcquirerProcessingResult(acquirerResponse.PaymentId, acquirerResponse.IsPaymentSuccessful);
+                var json = JsonConvert.SerializeObject(acquirerPayment, DefaultJsonSerializerSetting());
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "payment")
+                {
+                    Content = new StringContent(json, Encoding.UTF8)
+                };
+
+                var response = await httpClient.SendAsync(requestMessage);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseJson = await response.Content.ReadAsStringAsync();
+                    var acquirerResponse =
+                        JsonConvert.DeserializeObject<AcquirerResponseDto>(responseJson, DefaultJsonSerializerSetting());
+                    return new AcquirerProcessingResult(acquirerResponse.PaymentId, acquirerResponse.IsPaymentSuccessful);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
 
             return new AcquirerProcessingResult(Guid.Empty, false);

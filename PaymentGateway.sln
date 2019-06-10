@@ -11,12 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.test.yml = docker-compose.test.yml
 		docker-compose.yml = docker-compose.yml
-		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquirer.Client", "src\Acquirer.Client\Acquirer.Client.csproj", "{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquirer.Client.UnitTests", "test\Acquirer.Client.UnitTests\Acquirer.Client.UnitTests.csproj", "{056373EF-8A33-46CE-B281-4559A1E12C5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AcquirerMock", "AcquirerMock", "{74DFBCC6-6A5F-4637-94E6-211E9BD71212}"
+	ProjectSection(SolutionItems) = preProject
+		config\mock-acquirer-setup.json = config\mock-acquirer-setup.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
