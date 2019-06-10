@@ -67,7 +67,17 @@ namespace PaymentGateway.Tests.Controllers
         }
 
         [Fact]
-        public async Task return_ok_when_payment_successfully_retrieved()
+        public async Task return_server_error_500_if_exception_was_thrown_during_processing()
+        {
+            processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>())).ThrowsAsync(new Exception());
+
+            var result = await paymentController.Post(new MakePaymentV1()) as ObjectResult;
+
+            result.StatusCode.Should().Be(500);
+        }
+
+        [Fact]
+        public async Task return_ok_when_payment_details_successfully_retrieved()
         {
             retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(It.IsAny<Option<PaymentDetails>>());
 

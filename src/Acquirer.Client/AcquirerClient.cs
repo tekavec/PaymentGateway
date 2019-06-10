@@ -30,27 +30,19 @@ namespace Acquirer.Client
                 Amount = createPayment.Amount,
                 Currency = createPayment.Currency
             };
-            try
+            var json = JsonConvert.SerializeObject(acquirerPayment, DefaultJsonSerializerSetting());
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "payment")
             {
-                var json = JsonConvert.SerializeObject(acquirerPayment, DefaultJsonSerializerSetting());
-                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "payment")
-                {
-                    Content = new StringContent(json, Encoding.UTF8)
-                };
+                Content = new StringContent(json, Encoding.UTF8)
+            };
 
-                var response = await httpClient.SendAsync(requestMessage);
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseJson = await response.Content.ReadAsStringAsync();
-                    var acquirerResponse =
-                        JsonConvert.DeserializeObject<AcquirerResponseDto>(responseJson, DefaultJsonSerializerSetting());
-                    return new AcquirerProcessingResult(acquirerResponse.PaymentId, acquirerResponse.IsPaymentSuccessful);
-                }
-            }
-            catch (Exception e)
+            var response = await httpClient.SendAsync(requestMessage);
+            if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine(e);
-                throw;
+                var responseJson = await response.Content.ReadAsStringAsync();
+                var acquirerResponse =
+                    JsonConvert.DeserializeObject<AcquirerResponseDto>(responseJson, DefaultJsonSerializerSetting());
+                return new AcquirerProcessingResult(acquirerResponse.PaymentId, acquirerResponse.IsPaymentSuccessful);
             }
 
             return new AcquirerProcessingResult(Guid.Empty, false);

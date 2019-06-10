@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Acquirer.Client.Domain;
+using LaYumba.Functional;
 using Microsoft.AspNetCore.Mvc;
+using PaymentGateway.Domain;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
 using PaymentGateway.Models;
+using static LaYumba.Functional.F;
 
 namespace PaymentGateway.Controllers
 {
@@ -26,6 +29,7 @@ namespace PaymentGateway.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
             var createPayment = new CreatePayment(
                 model.CardHolder,
                 model.CardNumber,
@@ -34,9 +38,11 @@ namespace PaymentGateway.Controllers
                 model.ExpiryMonth,
                 model.Amount,
                 model.Currency);
-            var paymentProcessingResult = await processPaymentService.Process(createPayment);
 
-            return new CreatedResult("get", paymentProcessingResult.Key);
+            return await processPaymentService.Process(createPayment)
+                .Map(
+                    Faulted: ex => StatusCode(500, Errors.UnexpectedError),
+                    Completed: val => new CreatedResult("get", val.Key));
         }
 
         [HttpGet("{id}")]

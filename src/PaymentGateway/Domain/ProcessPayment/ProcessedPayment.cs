@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PaymentGateway.Domain
+namespace PaymentGateway.Domain.ProcessPayment
 {
     public class ProcessedPayment
     {
