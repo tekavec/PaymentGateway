@@ -7,7 +7,6 @@ using PaymentGateway.Domain;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
 using PaymentGateway.Models;
-using static LaYumba.Functional.F;
 
 namespace PaymentGateway.Controllers
 {
@@ -30,16 +29,7 @@ namespace PaymentGateway.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var createPayment = new CreatePayment(
-                model.CardHolder,
-                model.CardNumber,
-                model.Cvv,
-                model.ExpiryYear,
-                model.ExpiryMonth,
-                model.Amount,
-                model.Currency);
-
-            return await processPaymentService.Process(createPayment)
+            return await processPaymentService.Process(GetCreatePayment(model))
                 .Map(
                     Faulted: ex => StatusCode(500, Errors.UnexpectedError),
                     Completed: val => new CreatedResult("get", val.Key));
@@ -47,8 +37,23 @@ namespace PaymentGateway.Controllers
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
+            => await retrievePaymentService.Get(id)
+                .Map(
+                    Faulted: ex => StatusCode(500, Errors.UnexpectedError),
+                    Completed: val => val.Match(
+                        Some: Ok, 
+                        None: () => NotFound($"Payment details for id={id} not found.") as ObjectResult));
+
+        private static CreatePayment GetCreatePayment(MakePaymentV1 model)
         {
-            return Ok(await retrievePaymentService.Get(id));
+            return new CreatePayment(
+                model.CardHolder,
+                model.CardNumber,
+                model.Cvv,
+                model.ExpiryYear,
+                model.ExpiryMonth,
+                model.Amount,
+                model.Currency);
         }
     }
 }

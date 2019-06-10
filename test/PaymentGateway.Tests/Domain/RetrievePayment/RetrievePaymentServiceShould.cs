@@ -21,7 +21,7 @@ namespace PaymentGateway.Tests.Domain.RetrievePayment
         {
             var paymentId = Guid.NewGuid();
             var retrievePaymentService = new RetrievePaymentService(paymentRepository.Object);
-            var paymentDetails = CreatePaymentDetails(paymentId);
+            var paymentDetails = Some(CreatePaymentDetails(paymentId));
             paymentRepository.Setup(a => a.Read(paymentId)).ReturnsAsync(paymentDetails);
 
             var result = await retrievePaymentService.Get(paymentId);

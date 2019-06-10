@@ -7,9 +7,9 @@ using PaymentGateway.Models;
 using System;
 using System.Threading.Tasks;
 using Acquirer.Client.Domain;
-using LaYumba.Functional;
 using PaymentGateway.Domain.RetrievePayment;
 using Xunit;
+using static LaYumba.Functional.F;
 using static PaymentGateway.Tests.Fakes;
 
 namespace PaymentGateway.Tests.Controllers
@@ -77,16 +77,6 @@ namespace PaymentGateway.Tests.Controllers
         }
 
         [Fact]
-        public async Task return_ok_when_payment_details_successfully_retrieved()
-        {
-            retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(It.IsAny<Option<PaymentDetails>>());
-
-            var result = await paymentController.Get(Guid.NewGuid());
-
-            result.Should().BeOfType<OkObjectResult>();
-        }
-
-        [Fact]
 
         public async Task return_payment_details_for_a_given_payment_identifier()
         {
@@ -96,8 +86,30 @@ namespace PaymentGateway.Tests.Controllers
 
             var result = await paymentController.Get(paymentId) as OkObjectResult;
 
-            result.Value.Should().BeOfType<Option<PaymentDetails>>();
+            result.Value.Should().BeOfType<PaymentDetails>();
             result.Value.Should().Be(paymentDetails);
+        }
+
+        [Fact]
+        public async Task return_not_found_404_if_payment_details_are_not_found()
+        {
+            var paymentId = Guid.NewGuid();
+            retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(None);
+
+            var result = await paymentController.Get(paymentId) as ObjectResult;
+
+            result.StatusCode.Should().Be(404);
+        }
+
+        [Fact]
+        public async Task return_server_error_500_if_exception_was_thrown_during_payment_retrieving()
+        {
+            var paymentId = Guid.NewGuid();
+            retrievePaymentService.Setup(a => a.Get(paymentId)).ThrowsAsync(new Exception());
+
+            var result = await paymentController.Get(paymentId) as ObjectResult;
+
+            result.StatusCode.Should().Be(500);
         }
     }
 }

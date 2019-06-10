@@ -1,24 +1,20 @@
 ﻿using System;
 using Acquirer.Client.Domain;
-using LaYumba.Functional;
-using PaymentGateway.Domain;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Models;
-using static LaYumba.Functional.F;
 
 namespace PaymentGateway.Tests
 {
     public class Fakes
     {
-        public static Option<PaymentDetails> CreatePaymentDetails(Guid paymentId)
-            => Some(
-                new PaymentDetails(
+        public static PaymentDetails CreatePaymentDetails(Guid paymentId)
+            => new PaymentDetails(
                     paymentId,
                     "a card holder",
                     "a card number",
                     2029,
                     12,
-                    true));
+                    true);
 
         public static PaymentProcessingResult CreateSuccessfulPaymentProcessingResult(Guid key)
             => new PaymentProcessingResult(key, true);

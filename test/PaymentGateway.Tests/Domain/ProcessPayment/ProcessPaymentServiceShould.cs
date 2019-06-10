@@ -4,7 +4,6 @@ using Acquirer.Client;
 using Acquirer.Client.Domain;
 using FluentAssertions;
 using Moq;
-using PaymentGateway.Domain;
 using PaymentGateway.Domain.Persistence;
 using PaymentGateway.Domain.ProcessPayment;
 using Xunit;
