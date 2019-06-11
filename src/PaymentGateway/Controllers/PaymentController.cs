@@ -18,7 +18,7 @@ namespace PaymentGateway.Controllers
         private readonly IRetrievePaymentService retrievePaymentService;
 
         public PaymentController(
-            IProcessPaymentService processPaymentService, 
+            IProcessPaymentService processPaymentService,
             IRetrievePaymentService retrievePaymentService)
         {
             this.processPaymentService = processPaymentService;
@@ -34,7 +34,8 @@ namespace PaymentGateway.Controllers
             return await ProcessPayment(command)
                 .Map(
                     Faulted: ex => StatusCode(500, Errors.UnexpectedError),
-                    Completed: result => new CreatedResult("get", result.Key) as ObjectResult);
+                    Completed: result => new CreatedAtRouteResult("payment", new {result.Key},
+                        new ProcessResult(result.Key, result.Status)) as ObjectResult);
         }
 
         [HttpGet("{id}")]
@@ -61,6 +62,18 @@ namespace PaymentGateway.Controllers
                 (int)model.ExpiryMonth,
                 model.Amount,
                 model.Currency);
+        }
+    }
+
+    public class ProcessResult
+    {
+        public Guid PaymentId { get; }
+        public bool Status { get; }
+
+        public ProcessResult(Guid paymentId, bool status)
+        {
+            PaymentId = paymentId;
+            Status = status;
         }
     }
 }
