@@ -38,13 +38,15 @@ namespace PaymentGateway.Tests.Controllers
         [Fact]
         public async Task return_result_of_processed_payment_when_payment_successfully_processed()
         {
-            var transactionId = Guid.NewGuid();
+            var paymentId = Guid.NewGuid();
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>()))
-                .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(transactionId));
+                .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(paymentId));
 
-            var result = await paymentController.Post(GetValidMakePaymentV1()) as CreatedResult;
+            var response = await paymentController.Post(GetValidMakePaymentV1()) as CreatedAtActionResult;
+            response.StatusCode.Should().Be(201);
 
-            result.Value.Should().Be(transactionId);
+            var result = response.Value as PaymentProcessingResult;
+            result.Key.Should().Be(paymentId);
         }
 
         [Fact]
@@ -56,6 +58,7 @@ namespace PaymentGateway.Tests.Controllers
 
             result.Should().BeOfType<BadRequestObjectResult>();
         }
+
 
         [Fact]
         public async Task return_server_error_500_if_exception_was_thrown_during_processing()

@@ -31,11 +31,11 @@ namespace PaymentGateway.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return await ProcessPayment(command)
+            var objectResult = await ProcessPayment(command)
                 .Map(
                     Faulted: ex => StatusCode(500, Errors.UnexpectedError),
-                    Completed: result => new CreatedAtRouteResult("payment", new {result.Key},
-                        new ProcessResult(result.Key, result.Status)) as ObjectResult);
+                    Completed: result => CreatedAtAction("Get", new { id = result.Key}, new PaymentProcessingResult(result.Key, result.Status)));
+            return objectResult;
         }
 
         [HttpGet("{id}")]
@@ -62,18 +62,6 @@ namespace PaymentGateway.Controllers
                 (int)model.ExpiryMonth,
                 model.Amount,
                 model.Currency);
-        }
-    }
-
-    public class ProcessResult
-    {
-        public Guid PaymentId { get; }
-        public bool Status { get; }
-
-        public ProcessResult(Guid paymentId, bool status)
-        {
-            PaymentId = paymentId;
-            Status = status;
         }
     }
 }

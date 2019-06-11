@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway", "src\PaymentGateway\PaymentGateway.csproj", "{D3F84A2C-C2EE-4C84-961C-3B5715966BA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Tests", "test\PaymentGateway.Tests\PaymentGateway.Tests.csproj", "{65221893-8CE7-4559-9A83-DC3F41EDDEF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.UnitTests", "test\PaymentGateway.UnitTests\PaymentGateway.UnitTests.csproj", "{65221893-8CE7-4559-9A83-DC3F41EDDEF4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{EFAD878C-DF67-45DA-B198-FD0E85DDEBC6}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AcquirerMock", "AcquirerMoc
 		config\mock-acquirer-setup.json = config\mock-acquirer-setup.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.IntegrationTests", "test\PaymentGateway.IntegrationTests\PaymentGateway.IntegrationTests.csproj", "{FF4A0CD7-85A6-4DA8-95AB-50EBE62341DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.IntegrationTests", "test\PaymentGateway.IntegrationTests\PaymentGateway.IntegrationTests.csproj", "{FF4A0CD7-85A6-4DA8-95AB-50EBE62341DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{713C1198-618A-445C-AB24-6384426195C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{65221893-8CE7-4559-9A83-DC3F41EDDEF4} = {713C1198-618A-445C-AB24-6384426195C2}
+		{056373EF-8A33-46CE-B281-4559A1E12C5D} = {713C1198-618A-445C-AB24-6384426195C2}
+		{FF4A0CD7-85A6-4DA8-95AB-50EBE62341DD} = {713C1198-618A-445C-AB24-6384426195C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9FBD961B-A7A2-4887-8B08-05E0C730DDCB}

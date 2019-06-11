@@ -2,7 +2,7 @@
 
 namespace PaymentGateway.Domain.ProcessPayment
 {
-    public struct PaymentProcessingResult
+    public sealed class PaymentProcessingResult
     {
         public PaymentProcessingResult(Guid key, bool status)
         {

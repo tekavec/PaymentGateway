@@ -47,7 +47,32 @@ namespace PaymentGateway.IntegrationTests
             var response = await client.SendAsync(request);
 
             response.StatusCode.Should().Be(201);
-            response.Headers.Location.AbsolutePath.Should().Contain("/payment/get");
+            response.Headers.Location.AbsolutePath.Should().StartWith(defaultPage.RequestMessage.RequestUri.AbsolutePath);
+        }
+
+        [Fact]
+        public async Task return_OK200_when_retrieving_previously_created_payment()
+        {
+            var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+            var defaultPage = await client.GetAsync("/payment");
+            var request = new HttpRequestMessage(HttpMethod.Post, defaultPage.RequestMessage.RequestUri)
+            {
+                Content = new StringContent(
+                    GetValidMakePaymentV1Json(), 
+                    Encoding.UTF8, 
+                    "application/json")
+            };
+            var createPaymentResponse = await client.SendAsync(request);
+
+            createPaymentResponse.StatusCode.Should().Be(201);
+
+            var result = await client.GetAsync(createPaymentResponse.Headers.Location.PathAndQuery);
+
+            result.StatusCode.Should().Be(200);
+
         }
     }
 }

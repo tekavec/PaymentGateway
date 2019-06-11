@@ -10,6 +10,5 @@ namespace PaymentGateway.Domain.ProcessPayment
         }
 
         public Guid Key { get; }
-
     }
 }

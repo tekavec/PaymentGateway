@@ -12,12 +12,14 @@ namespace PaymentGateway.IoC
 {
     public static class Api
     {
+        private static readonly PaymentRepository PaymentRepository = new PaymentRepository(new GuidIdentityGenerator());
+
         public static void RegisterDependencies(this IServiceCollection services)
         {
             services.AddSingleton<IProcessPaymentService, ProcessPaymentService>();
             services.AddSingleton<IRetrievePaymentService, RetrievePaymentService>();
-            services.AddSingleton<ISavePaymentRepository, PaymentRepository>();
-            services.AddSingleton<IReadPaymentRepository, PaymentRepository>();
+            services.AddSingleton<ISavePaymentRepository>(_ => PaymentRepository);
+            services.AddSingleton<IReadPaymentRepository>(_ => PaymentRepository);
             services.AddSingleton<IIdentityGenerator<Guid>, GuidIdentityGenerator>();
         }
 
