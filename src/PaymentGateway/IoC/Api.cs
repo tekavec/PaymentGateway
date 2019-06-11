@@ -1,9 +1,12 @@
 ﻿using System;
 using Acquirer.Client;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PaymentGateway.Domain.Persistence;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
+using PaymentGateway.Models;
+using PaymentGateway.Validation;
 
 namespace PaymentGateway.IoC
 {
@@ -17,6 +20,12 @@ namespace PaymentGateway.IoC
             services.AddSingleton<IReadPaymentRepository, PaymentRepository>();
             services.AddSingleton<IIdentityGenerator<Guid>, GuidIdentityGenerator>();
         }
+
+        public static void RegisterValidators(this IServiceCollection services)
+        {
+            services.AddTransient<IValidator<MakePaymentV1>>(_ => new MakePaymentV1Validator(() => DateTime.Now));
+        }
+
         public static void RegisterHttpClients(this IServiceCollection services)
         {
             services.AddHttpClient<IAcquirerClient, AcquirerClient>(client =>

@@ -1,6 +1,6 @@
 ﻿using LaYumba.Functional;
 
-namespace PaymentGateway.Domain
+namespace PaymentGateway.Validation
 {
     public static class Errors
     {
@@ -9,7 +9,6 @@ namespace PaymentGateway.Domain
 
     public sealed class UnexpectedError : Error
     {
-        public override string Message { get; }
-            = "An unexpected error has occurred";
+        public override string Message { get; } = "An unexpected error has occurred.";
     }
 }

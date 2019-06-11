@@ -27,21 +27,12 @@ namespace PaymentGateway.Tests.Controllers
 
         public PaymentControllerShould()
         {
-            paymentController = new PaymentController(processPaymentService.Object, retrievePaymentService.Object)
+            paymentController = new PaymentController(
+                processPaymentService.Object, 
+                retrievePaymentService.Object)
             {
                 ControllerContext = controllerContext
             };
-        }
-
-        [Fact]
-        public async Task return_created_at_result_when_payment_successfully_processed()
-        {
-            processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>()))
-                .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(Guid.NewGuid()));
-
-            var result = await paymentController.Post(new MakePaymentV1());
-
-            result.Should().BeOfType<CreatedResult>();
         }
 
         [Fact]
@@ -51,7 +42,7 @@ namespace PaymentGateway.Tests.Controllers
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>()))
                 .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(transactionId));
 
-            var result = await paymentController.Post(new MakePaymentV1()) as CreatedResult;
+            var result = await paymentController.Post(GetValidMakePaymentV1()) as CreatedResult;
 
             result.Value.Should().Be(transactionId);
         }
@@ -61,7 +52,7 @@ namespace PaymentGateway.Tests.Controllers
         {
             controllerContext.ModelState.AddModelError("Request", "Invalid");
 
-            var result = await paymentController.Post(new MakePaymentV1());
+            var result = await paymentController.Post(GetValidMakePaymentV1());
 
             result.Should().BeOfType<BadRequestObjectResult>();
         }
@@ -71,7 +62,7 @@ namespace PaymentGateway.Tests.Controllers
         {
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>())).ThrowsAsync(new Exception());
 
-            var result = await paymentController.Post(new MakePaymentV1()) as ObjectResult;
+            var result = await paymentController.Post(GetValidMakePaymentV1()) as ObjectResult;
 
             result.StatusCode.Should().Be(500);
         }

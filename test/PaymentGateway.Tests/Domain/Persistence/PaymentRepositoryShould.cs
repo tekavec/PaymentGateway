@@ -25,7 +25,7 @@ namespace PaymentGateway.Tests.Domain.Persistence
         {
             var id = Guid.NewGuid();
             identityGenerator.Setup(a => a.NewId).Returns(id);
-            var newPayment = CreateNewPayment();
+            var newPayment = GetNewPayment();
             await paymentRepository.Save(newPayment);
 
             var result = await paymentRepository.Read(id);
