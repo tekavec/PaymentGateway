@@ -8,11 +8,12 @@ using PaymentGateway.Domain.RetrievePayment;
 using PaymentGateway.Models;
 using PaymentGateway.Validation;
 
-namespace PaymentGateway.IoC
+namespace PaymentGateway.Configuration
 {
     public static class Api
     {
-        private static readonly PaymentRepository PaymentRepository = new PaymentRepository(new GuidIdentityGenerator());
+        private static readonly PaymentRepository
+            PaymentRepository = new PaymentRepository(new GuidIdentityGenerator());
 
         public static void RegisterDependencies(this IServiceCollection services)
         {

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Acquirer.Client.Domain;
 using LaYumba.Functional;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
@@ -10,6 +11,7 @@ using PaymentGateway.Validation;
 
 namespace PaymentGateway.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("payment")]
     public class PaymentController : ControllerBase
