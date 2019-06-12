@@ -1,12 +1,9 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using PaymentGateway.Configuration;
+using PaymentGateway.Infrastructure.Security;
 
 namespace PaymentGateway.Controllers
 {
@@ -14,37 +11,19 @@ namespace PaymentGateway.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : ControllerBase
     {
-        private readonly IConfiguration configuration;
+        private readonly ITokenGenerator tokenGenerator;
 
-        public AccountController(IConfiguration configuration)
+        public AccountController(ITokenGenerator tokenGenerator)
         {
-            this.configuration = configuration;
+            this.tokenGenerator = tokenGenerator;
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GenerateToken()
         {
-            var token = await GenerateJwtSecurityToken();
+            var token = await tokenGenerator.GenerateToken();
             return Ok(new { token });
-        }
-
-        private Task<string> GenerateJwtSecurityToken()
-        {
-            var tokenManagement = configuration.GetSection("tokenManagement").Get<TokenManagement>();
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenManagement.Secret));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var jwtToken = new JwtSecurityToken(
-                tokenManagement.Issuer,
-                tokenManagement.Audience,
-                null,
-                expires: DateTime.Now.AddMinutes(tokenManagement.AccessExpiration),
-                signingCredentials: credentials
-            );
-
-            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            return Task.FromResult(token);
         }
     }
 }

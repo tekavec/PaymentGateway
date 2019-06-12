@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PaymentGateway.Domain.Persistence;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
+using PaymentGateway.Infrastructure.Security;
 using PaymentGateway.Models;
 using PaymentGateway.Validation;
 
@@ -22,6 +23,7 @@ namespace PaymentGateway.Configuration
             services.AddSingleton<ISavePaymentRepository>(_ => PaymentRepository);
             services.AddSingleton<IReadPaymentRepository>(_ => PaymentRepository);
             services.AddSingleton<IIdentityGenerator<Guid>, GuidIdentityGenerator>();
+            services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
         }
 
         public static void RegisterValidators(this IServiceCollection services)
