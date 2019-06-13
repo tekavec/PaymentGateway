@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  acquirer:
+    image: jordimartin/mmock
+    ports:
+      - 8082:8082
+      - 8083:8083
+    environment:
+      - LOG_LEVEL=INFO
+      - jvmOptions=-Dmockserver.initializationJsonPath=/config/mock-acquirer-setup.json
+    volumes:
+      - ./config:/config
+
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.0.0
+    volumes:
+     - ./config:/etc/prometheus
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    ports:
+     - 9090:9090
+    depends_on:
+     - exporter
+
+  exporter:
+    image: prom/node-exporter:latest
+    ports:
+     - 9100:9100
+
+  grafana:
+    image: grafana/grafana
+    ports:
+     - 3000:3000
+    depends_on:
+      - prometheus

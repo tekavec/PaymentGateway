@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.UnitTests", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{EFAD878C-DF67-45DA-B198-FD0E85DDEBC6}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose.metrics.yml = docker-compose.metrics.yml
 		docker-compose.test.yml = docker-compose.test.yml
 		docker-compose.yml = docker-compose.yml
 		Makefile = Makefile
@@ -26,6 +27,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.IntegrationTests", "test\PaymentGateway.IntegrationTests\PaymentGateway.IntegrationTests.csproj", "{FF4A0CD7-85A6-4DA8-95AB-50EBE62341DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{713C1198-618A-445C-AB24-6384426195C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prometheus", "Prometheus", "{206CF8DC-1295-448B-9FAB-1F6EDBDAAC79}"
+	ProjectSection(SolutionItems) = preProject
+		config\prometheus.yml = config\prometheus.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
