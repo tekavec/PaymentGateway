@@ -38,7 +38,17 @@ namespace PaymentGateway.IntegrationTests
         }
 
         [Fact]
-        public async Task return_Unauthorized_for_valid_but_unauthorized_request()
+        public async Task return_200OK_for_diagnostic_alive_check()
+        {
+            var unauthorizedClient = factory.CreateClient();
+
+            var response = await unauthorizedClient.GetAsync("diagnostics/alive");
+
+            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+        }
+
+        [Fact]
+        public async Task return_401Unauthorized_for_valid_but_unauthorized_request()
         {
             var paymentId = Guid.NewGuid();
             var unauthorizedClient = factory.CreateClient();
@@ -49,18 +59,18 @@ namespace PaymentGateway.IntegrationTests
         }
 
         [Fact]
-        public async Task return_NotFound_when_retrieving_non_existing_payment()
+        public async Task return_404NotFound_when_retrieving_non_existing_payment()
         {
             await AuthorizeClient();
             var paymentId = Guid.NewGuid();
 
             var response = await authorizedClient.GetAsync($"payment/{paymentId}");
 
-            response.StatusCode.Should().Be(404);
+            response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         }
 
         [Fact]
-        public async Task process_payment_and_return_with_Created_code_and_route_value()
+        public async Task process_payment_and_return_with_201Created_code_and_route_value()
         {
             await AuthorizeClient();
             var defaultPage = await authorizedClient.GetAsync("/payment");
@@ -73,12 +83,12 @@ namespace PaymentGateway.IntegrationTests
             };
             var response = await authorizedClient.SendAsync(request);
 
-            response.StatusCode.Should().Be(201);
+            response.StatusCode.Should().Be(StatusCodes.Status201Created);
             response.Headers.Location.AbsolutePath.Should().StartWith(defaultPage.RequestMessage.RequestUri.AbsolutePath);
         }
 
         [Fact]
-        public async Task return_OK200_when_retrieving_previously_created_payment()
+        public async Task return_200OK_when_retrieving_previously_created_payment()
         {
             await AuthorizeClient();
             var defaultPage = await authorizedClient.GetAsync("/payment");
@@ -91,11 +101,11 @@ namespace PaymentGateway.IntegrationTests
             };
             var createPaymentResponse = await authorizedClient.SendAsync(request);
 
-            createPaymentResponse.StatusCode.Should().Be(201);
+            createPaymentResponse.StatusCode.Should().Be(StatusCodes.Status201Created);
 
             var result = await authorizedClient.GetAsync(createPaymentResponse.Headers.Location.PathAndQuery);
 
-            result.StatusCode.Should().Be(200);
+            result.StatusCode.Should().Be(StatusCodes.Status200OK);
         }
 
         private async Task AuthorizeClient()

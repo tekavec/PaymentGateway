@@ -1,5 +1,7 @@
 ﻿using System;
 using FluentValidation.TestHelper;
+using Moq;
+using PaymentGateway.Infrastructure;
 using PaymentGateway.Models;
 using PaymentGateway.Validation;
 using Xunit;
@@ -8,10 +10,13 @@ namespace PaymentGateway.UnitTests.Validation
 {
     public class MakePaymentV1ValidatorShould
     {
+        private readonly Mock<IClock> clock = new Mock<IClock>();
+
         private readonly MakePaymentV1Validator validator;
         public MakePaymentV1ValidatorShould()
         {
-            validator = new MakePaymentV1Validator(() => DateTime.Now);
+            clock.Setup(a => a.UtcNow()).Returns(DateTimeOffset.UtcNow);
+            validator = new MakePaymentV1Validator(clock.Object);
         }
 
         [Theory]
@@ -79,7 +84,12 @@ namespace PaymentGateway.UnitTests.Validation
         [Fact]
         public void validate_expired_card()
         {
-            var expiryValidator = new MakePaymentV1Validator(() => new DateTime(2019, 6, 1));
+            var now = new DateTimeOffset(new DateTime(2019, 6, 1));
+            var specificClock = new Mock<IClock>(MockBehavior.Strict);
+            specificClock.Setup(a => a.UtcNow()).Returns(now);
+
+            var expiryValidator = new MakePaymentV1Validator(clock.Object);
+
             expiryValidator.ShouldHaveValidationErrorFor(a => a.ExpiryYear,
                 new MakePaymentV1 {ExpiryYear = 2019, ExpiryMonth = 5});
         }
@@ -87,7 +97,12 @@ namespace PaymentGateway.UnitTests.Validation
         [Fact]
         public void validate_not_expired_card()
         {
-            var expiryValidator = new MakePaymentV1Validator(() => new DateTime(2019, 5, 31));
+            var now = new DateTimeOffset(new DateTime(2019, 5, 31));
+            var specificClock = new Mock<IClock>(MockBehavior.Strict);
+            specificClock.Setup(a => a.UtcNow()).Returns(now);
+
+            var expiryValidator = new MakePaymentV1Validator(specificClock.Object);
+
             expiryValidator.ShouldNotHaveValidationErrorFor(a => a.ExpiryYear,
                 new MakePaymentV1 {ExpiryYear = 2019, ExpiryMonth = 5});
         }

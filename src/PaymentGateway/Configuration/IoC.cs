@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PaymentGateway.Domain.Persistence;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
+using PaymentGateway.Infrastructure;
 using PaymentGateway.Infrastructure.Security;
 using PaymentGateway.Infrastructure.Swagger;
 using PaymentGateway.Models;
@@ -28,11 +29,12 @@ namespace PaymentGateway.Configuration
             services.AddSingleton<IReadPaymentRepository>(_ => PaymentRepository);
             services.AddSingleton<IIdentityGenerator<Guid>, GuidIdentityGenerator>();
             services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IClock, Clock>();
         }
 
         public static void RegisterValidators(this IServiceCollection services)
         {
-            services.AddTransient<IValidator<MakePaymentV1>>(_ => new MakePaymentV1Validator(() => DateTime.Now));
+            services.AddTransient<IValidator<MakePaymentV1>, MakePaymentV1Validator>();
         }
 
         public static void RegisterHttpClients(this IServiceCollection services)

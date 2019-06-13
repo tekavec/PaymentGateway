@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentValidation;
+using PaymentGateway.Infrastructure;
 using PaymentGateway.Models;
 
 namespace PaymentGateway.Validation
@@ -10,7 +11,7 @@ namespace PaymentGateway.Validation
         private const int FirstMonthOfYear = 1; 
         private const int FirstDayOfMonth = 1; 
 
-        public MakePaymentV1Validator(Func<DateTime> clock)
+        public MakePaymentV1Validator(IClock clock)
         {
             RuleFor(x => x.CardHolder)
                 .NotEmpty()
@@ -38,7 +39,7 @@ namespace PaymentGateway.Validation
 
             RuleFor(x => x.ExpiryYear)
                 .NotEmpty()
-                .GreaterThanOrEqualTo(clock.Invoke().Year)
+                .GreaterThanOrEqualTo(clock.UtcNow().Year)
                 .Must((x, year) => NotBeExpired(clock, year, x.ExpiryMonth))
                 .WithMessage(c => "Credit card has expired.");
 
@@ -49,11 +50,11 @@ namespace PaymentGateway.Validation
                 .WithMessage(c => "Must be between 1 and 12.");
         }
 
-        private bool NotBeExpired(Func<DateTime> clock, int? expiryYear, int? expiryMonth)
+        private bool NotBeExpired(IClock clock, int? expiryYear, int? expiryMonth)
         {
             if (expiryMonth == null || expiryMonth < 1 || expiryMonth > 12)
                 return false;
-            var now = clock.Invoke();
+            var now = clock.UtcNow();
             var expiryDate = new DateTime(
                     expiryYear ?? DefinitelyExpiredYear, 
                     expiryMonth ?? FirstMonthOfYear, 

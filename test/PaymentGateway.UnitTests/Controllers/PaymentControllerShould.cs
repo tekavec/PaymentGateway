@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Acquirer.Client.Domain;
 using FluentAssertions;
 using LaYumba.Functional;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -46,7 +47,7 @@ namespace PaymentGateway.UnitTests.Controllers
                 .ReturnsAsync(TestHelpers.CreateSuccessfulPaymentProcessingResult(paymentId));
 
             var response = await paymentController.Post(TestHelpers.GetValidMakePaymentV1()) as CreatedAtActionResult;
-            response.StatusCode.Should().Be(201);
+            response.StatusCode.Should().Be(StatusCodes.Status201Created);
 
             var result = response.Value as PaymentProcessingResult;
             result.Key.Should().Be(paymentId);
@@ -70,7 +71,7 @@ namespace PaymentGateway.UnitTests.Controllers
 
             var result = await paymentController.Post(TestHelpers.GetValidMakePaymentV1()) as ObjectResult;
 
-            result.StatusCode.Should().Be(500);
+            result.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
         }
 
         [Fact]
@@ -94,7 +95,7 @@ namespace PaymentGateway.UnitTests.Controllers
 
             var result = await paymentController.Get(paymentId) as ObjectResult;
 
-            result.StatusCode.Should().Be(404);
+            result.StatusCode.Should().Be(StatusCodes.Status404NotFound);
         }
 
         [Fact]
@@ -105,7 +106,7 @@ namespace PaymentGateway.UnitTests.Controllers
 
             var result = await paymentController.Get(paymentId) as ObjectResult;
 
-            result.StatusCode.Should().Be(500);
+            result.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
         }
     }
 }
