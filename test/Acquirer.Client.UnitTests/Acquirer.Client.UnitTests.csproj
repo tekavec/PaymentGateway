@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestResults\**" />
+    <Compile Remove="tmp\**" />
+    <EmbeddedResource Remove="TestResults\**" />
+    <EmbeddedResource Remove="tmp\**" />
+    <None Remove="TestResults\**" />
+    <None Remove="tmp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="xunit" Version="2.4.0" />

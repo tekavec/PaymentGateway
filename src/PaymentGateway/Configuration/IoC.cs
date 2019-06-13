@@ -38,7 +38,7 @@ namespace PaymentGateway.Configuration
         public static void RegisterHttpClients(this IServiceCollection services)
         {
             services.AddHttpClient<IAcquirerClient, AcquirerClient>(client =>
-                client.BaseAddress = new Uri("http://localhost:8083"));
+                client.BaseAddress = new Uri("http://acquirer:8083"));
         }
 
         public static void RegisterSwaggerGeneration(this IServiceCollection services)
