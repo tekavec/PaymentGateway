@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using Acquirer.Client;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,8 +8,10 @@ using PaymentGateway.Domain.Persistence;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
 using PaymentGateway.Infrastructure.Security;
+using PaymentGateway.Infrastructure.Swagger;
 using PaymentGateway.Models;
 using PaymentGateway.Validation;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PaymentGateway.Configuration
 {
@@ -36,5 +40,29 @@ namespace PaymentGateway.Configuration
             services.AddHttpClient<IAcquirerClient, AcquirerClient>(client =>
                 client.BaseAddress = new Uri("http://localhost:8083"));
         }
+
+        public static void RegisterSwaggerGeneration(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Payment Gateway", Version = "v1" });
+                var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory,
+                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                if (File.Exists(xmlCommentsFilePath))
+                {
+                    c.IncludeXmlComments(xmlCommentsFilePath);
+                }
+                else
+                {
+                    //TODO Log.Warning($"Could not find XML comments file: {xmlCommentsFilePath}")
+                }
+
+                c.CustomSchemaIds(StripOutVersionNumberSuffix);
+                c.OperationFilter<CorrelationIdOperationFilter>();
+                c.AddSwaggerSecurityRequirements();
+            });
+        }
+
+        private static string StripOutVersionNumberSuffix(Type type) => type.Name.Substring(0, type.Name.Length - 2);
     }
 }

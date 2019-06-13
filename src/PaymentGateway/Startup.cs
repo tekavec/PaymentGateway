@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using System;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,10 @@ namespace PaymentGateway
 
         public IConfiguration Configuration { get; }
 
-
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(Configuration);
-
+            services.RegisterSwaggerGeneration();
             services.RegisterValidators();
             services.RegisterDependencies();
             services.RegisterHttpClients();
@@ -32,7 +30,6 @@ namespace PaymentGateway
                 .AddFluentValidation();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -41,8 +38,20 @@ namespace PaymentGateway
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+            }
+
+            if (!env.IsProduction())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                    {
+                        options.SwaggerEndpoint("swagger/v1/swagger.json", "Payment Gateway");
+                        options.RoutePrefix = String.Empty;
+                    }
+                );
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
             }
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

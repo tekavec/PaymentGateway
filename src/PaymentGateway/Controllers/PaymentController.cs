@@ -27,6 +27,11 @@ namespace PaymentGateway.Controllers
             this.retrievePaymentService = retrievePaymentService;
         }
 
+        /// <summary>
+        /// Process a new payment.
+        /// </summary>
+        /// <param name="command">Payment data</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MakePaymentV1 command)
         {
@@ -40,6 +45,11 @@ namespace PaymentGateway.Controllers
             return objectResult;
         }
 
+        /// <summary>
+        /// Retrieve details about the previously processed payment.
+        /// </summary>
+        /// <param name="id">Unique identifier of previously processed payment.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
             => await retrievePaymentService.Get(id)
