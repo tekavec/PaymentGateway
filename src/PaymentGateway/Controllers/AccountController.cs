@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using PaymentGateway.Configuration;
 using PaymentGateway.Infrastructure.Security;
 
 namespace PaymentGateway.Controllers

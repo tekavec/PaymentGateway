@@ -4,7 +4,7 @@ using PaymentGateway.Models;
 using PaymentGateway.Validation;
 using Xunit;
 
-namespace PaymentGateway.Tests.Validation
+namespace PaymentGateway.UnitTests.Validation
 {
     public class MakePaymentV1ValidatorShould
     {

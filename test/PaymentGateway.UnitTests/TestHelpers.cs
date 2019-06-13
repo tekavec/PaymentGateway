@@ -1,11 +1,13 @@
 ﻿using System;
 using Acquirer.Client.Domain;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Models;
 
-namespace PaymentGateway.Tests
+namespace PaymentGateway.UnitTests
 {
-    public class Fakes
+    public class TestHelpers
     {
         public static PaymentDetails CreatePaymentDetails(Guid paymentId)
             => new PaymentDetails(
@@ -60,5 +62,13 @@ namespace PaymentGateway.Tests
                 Amount = 99.99m,
                 Currency = "GBP"
             };
+    }
+
+    public class TestControllerContext : ControllerContext
+    {
+        public TestControllerContext()
+        {
+            HttpContext = new DefaultHttpContext();
+        }
     }
 }

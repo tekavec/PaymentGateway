@@ -27,6 +27,5 @@ namespace PaymentGateway.Infrastructure.Swagger
                     Default = Guid.NewGuid().ToString("D")
                 });
         }
-
     }
 }

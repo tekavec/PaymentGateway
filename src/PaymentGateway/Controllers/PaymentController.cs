@@ -4,6 +4,7 @@ using Acquirer.Client.Domain;
 using LaYumba.Functional;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;
 using PaymentGateway.Models;
@@ -18,13 +19,16 @@ namespace PaymentGateway.Controllers
     {
         private readonly IProcessPaymentService processPaymentService;
         private readonly IRetrievePaymentService retrievePaymentService;
+        private readonly ILogger<PaymentController> logger;
 
         public PaymentController(
             IProcessPaymentService processPaymentService,
-            IRetrievePaymentService retrievePaymentService)
+            IRetrievePaymentService retrievePaymentService,
+            ILogger<PaymentController> logger)
         {
             this.processPaymentService = processPaymentService;
             this.retrievePaymentService = retrievePaymentService;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -35,14 +39,20 @@ namespace PaymentGateway.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MakePaymentV1 command)
         {
+            logger.LogInformation("Start processing new payment.");
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var objectResult = await ProcessPayment(command)
+            var processingResult = await ProcessPayment(command)
                 .Map(
-                    Faulted: ex => StatusCode(500, Errors.UnexpectedError),
+                    Faulted: ex =>
+                    {
+                        logger.LogError(ex, Errors.UnexpectedError.Message);
+                        return StatusCode(500, Errors.UnexpectedError);
+                    },
                     Completed: result => CreatedAtAction("Get", new { id = result.Key}, new PaymentProcessingResult(result.Key, result.Status)));
-            return objectResult;
+            logger.LogInformation("Exit processing new payment.");
+            return processingResult;
         }
 
         /// <summary>
@@ -52,12 +62,26 @@ namespace PaymentGateway.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
-            => await retrievePaymentService.Get(id)
+        {
+            logger.LogInformation("Start retrieving payment details for payment id={id}.", id);
+            var paymentDetails = await retrievePaymentService.Get(id)
                 .Map(
-                    Faulted: ex => StatusCode(500, Errors.UnexpectedError),
+                    Faulted: ex =>
+                    {
+                        logger.LogError(ex, Errors.UnexpectedError.Message);
+                        return StatusCode(500, Errors.UnexpectedError);
+                    },
                     Completed: val => val.Match(
-                        Some: Ok, 
-                        None: () => NotFound($"Payment details for id={id} not found.") as ObjectResult));
+                        Some: Ok,
+                        None: () =>
+                        {
+                            logger.LogInformation("Payment details for id={id} not found.", id);
+                            return NotFound($"Payment details for id={id} not found.") as ObjectResult;
+                        }));
+
+            logger.LogInformation("Exit retrieving payment details for payment id={id}.", id);
+            return paymentDetails;
+        }
 
         private Task<PaymentProcessingResult> ProcessPayment(MakePaymentV1 command)
         {

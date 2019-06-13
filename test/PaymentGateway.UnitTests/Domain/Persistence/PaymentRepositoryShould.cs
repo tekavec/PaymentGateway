@@ -6,9 +6,8 @@ using Moq;
 using PaymentGateway.Domain.Persistence;
 using Xunit;
 using Xunit.Sdk;
-using static PaymentGateway.Tests.Fakes;
 
-namespace PaymentGateway.Tests.Domain.Persistence
+namespace PaymentGateway.UnitTests.Domain.Persistence
 {
     public class PaymentRepositoryShould
     {
@@ -25,7 +24,7 @@ namespace PaymentGateway.Tests.Domain.Persistence
         {
             var id = Guid.NewGuid();
             identityGenerator.Setup(a => a.NewId).Returns(id);
-            var newPayment = GetNewPayment();
+            var newPayment = TestHelpers.GetNewPayment();
             await paymentRepository.Save(newPayment);
 
             var result = await paymentRepository.Read(id);

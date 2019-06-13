@@ -11,7 +11,7 @@ namespace PaymentGateway.Domain.Persistence
     public class PaymentRepository: IReadPaymentRepository, ISavePaymentRepository
     {
         private readonly IIdentityGenerator<Guid> identityGenerator;
-        private readonly IDictionary<Guid, PaymentEntity> cache = new Dictionary<Guid, PaymentEntity>();
+        private readonly IDictionary<Guid, PaymentEntity> db = new Dictionary<Guid, PaymentEntity>();
 
         public PaymentRepository(IIdentityGenerator<Guid> identityGenerator)
         {
@@ -20,17 +20,17 @@ namespace PaymentGateway.Domain.Persistence
 
         public async Task<Option<PaymentDetails>> Read(Guid key)
         {
-            if (!cache.ContainsKey(key))
+            if (!db.ContainsKey(key))
                 return None;
 
-            var paymentEntity = cache[key];
-            return Some(new PaymentDetails(
+            var paymentEntity = db[key];
+            return await Task.FromResult(Some(new PaymentDetails(
                 key, 
                 paymentEntity.CardHolder,
                 paymentEntity.CardNumber,
                 paymentEntity.ExpiryYear,
                 paymentEntity.ExpiryMonth,
-                paymentEntity.ProcessedStatus));
+                paymentEntity.ProcessedStatus)));
         }
 
         public async Task<SavePaymentResult> Save(ProcessedPayment processedPayment)
@@ -45,8 +45,8 @@ namespace PaymentGateway.Domain.Persistence
                 processedPayment.Currency,
                 processedPayment.AcquirerPaymentId,
                 processedPayment.ProcessedStatus);
-            cache.Add(paymentEntity.Key, paymentEntity);
-            return new SavePaymentResult(paymentEntity.Key);
+            db.Add(paymentEntity.Key, paymentEntity);
+            return await Task.FromResult(new SavePaymentResult(paymentEntity.Key));
         }
     }
 }

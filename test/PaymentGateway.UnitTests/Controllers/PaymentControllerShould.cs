@@ -1,18 +1,18 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Threading.Tasks;
+using Acquirer.Client.Domain;
+using FluentAssertions;
+using LaYumba.Functional;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using PaymentGateway.Controllers;
 using PaymentGateway.Domain.ProcessPayment;
-using PaymentGateway.Models;
-using System;
-using System.Threading.Tasks;
-using Acquirer.Client.Domain;
 using PaymentGateway.Domain.RetrievePayment;
+using PaymentGateway.Models;
 using Xunit;
-using static LaYumba.Functional.F;
-using static PaymentGateway.Tests.Fakes;
 
-namespace PaymentGateway.Tests.Controllers
+namespace PaymentGateway.UnitTests.Controllers
 {
     public class PaymentControllerShould
     {
@@ -25,11 +25,14 @@ namespace PaymentGateway.Tests.Controllers
         private readonly Mock<IRetrievePaymentService> retrievePaymentService =
             new Mock<IRetrievePaymentService>(MockBehavior.Strict);
 
+        private readonly Mock<ILogger<PaymentController>> logger = new Mock<ILogger<PaymentController>>();
+
         public PaymentControllerShould()
         {
             paymentController = new PaymentController(
                 processPaymentService.Object, 
-                retrievePaymentService.Object)
+                retrievePaymentService.Object,
+                logger.Object)
             {
                 ControllerContext = controllerContext
             };
@@ -40,9 +43,9 @@ namespace PaymentGateway.Tests.Controllers
         {
             var paymentId = Guid.NewGuid();
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>()))
-                .ReturnsAsync(CreateSuccessfulPaymentProcessingResult(paymentId));
+                .ReturnsAsync(TestHelpers.CreateSuccessfulPaymentProcessingResult(paymentId));
 
-            var response = await paymentController.Post(GetValidMakePaymentV1()) as CreatedAtActionResult;
+            var response = await paymentController.Post(TestHelpers.GetValidMakePaymentV1()) as CreatedAtActionResult;
             response.StatusCode.Should().Be(201);
 
             var result = response.Value as PaymentProcessingResult;
@@ -54,7 +57,7 @@ namespace PaymentGateway.Tests.Controllers
         {
             controllerContext.ModelState.AddModelError("Request", "Invalid");
 
-            var result = await paymentController.Post(GetValidMakePaymentV1());
+            var result = await paymentController.Post(TestHelpers.GetValidMakePaymentV1());
 
             result.Should().BeOfType<BadRequestObjectResult>();
         }
@@ -65,17 +68,16 @@ namespace PaymentGateway.Tests.Controllers
         {
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>())).ThrowsAsync(new Exception());
 
-            var result = await paymentController.Post(GetValidMakePaymentV1()) as ObjectResult;
+            var result = await paymentController.Post(TestHelpers.GetValidMakePaymentV1()) as ObjectResult;
 
             result.StatusCode.Should().Be(500);
         }
 
         [Fact]
-
         public async Task return_payment_details_for_a_given_payment_identifier()
         {
             var paymentId = Guid.NewGuid();
-            var paymentDetails = CreatePaymentDetails(paymentId);
+            var paymentDetails = TestHelpers.CreatePaymentDetails(paymentId);
             retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(paymentDetails);
 
             var result = await paymentController.Get(paymentId) as OkObjectResult;
@@ -88,7 +90,7 @@ namespace PaymentGateway.Tests.Controllers
         public async Task return_not_found_404_if_payment_details_are_not_found()
         {
             var paymentId = Guid.NewGuid();
-            retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(None);
+            retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(F.None);
 
             var result = await paymentController.Get(paymentId) as ObjectResult;
 
