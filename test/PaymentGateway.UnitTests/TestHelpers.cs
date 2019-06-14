@@ -12,7 +12,6 @@ namespace PaymentGateway.UnitTests
         public static PaymentDetails CreatePaymentDetails(Guid paymentId)
             => new PaymentDetails(
                 paymentId,
-                "a card holder",
                 "a card number",
                 2029,
                 12,
@@ -32,18 +31,16 @@ namespace PaymentGateway.UnitTests
 
         public static ProcessedPayment GetNewPayment()
             => new ProcessedPayment(
-                cardHolder: "a card holder",
                 cardNumber: "1234567890123456",
                 expiryYear: 2029,
                 expiryMonth: 12,
                 amount: 12345.67m,
                 currency: "GBP",
                 acquirerPaymentId: Guid.NewGuid(),
-                processedStatus: true);
+                isPaymentSuccessful: true);
 
         public static CreatePayment GetCreatePayment()
             => new CreatePayment(
-                cardHolder: "a card holder",
                 cardNumber: "1234567890123456",
                 cvv: "123",
                 expiryYear: 2029,
@@ -54,7 +51,6 @@ namespace PaymentGateway.UnitTests
         public static MakePaymentV1 GetValidMakePaymentV1()
             => new MakePaymentV1
             {
-                CardHolder = "a card holder",
                 CardNumber = "12345678",
                 Cvv = "123",
                 ExpiryYear = DateTime.Today.Year + 1,

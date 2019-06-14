@@ -4,13 +4,13 @@ namespace PaymentGateway.Domain.ProcessPayment
 {
     public sealed class PaymentProcessingResult
     {
-        public PaymentProcessingResult(Guid key, bool status)
+        public PaymentProcessingResult(Guid key, bool isPaymentSuccessful)
         {
             Key = key;
-            Status = status;
+            IsPaymentSuccessful = isPaymentSuccessful;
         }
 
         public Guid Key { get; }
-        public bool Status { get; }
+        public bool IsPaymentSuccessful { get; }
     }
 }

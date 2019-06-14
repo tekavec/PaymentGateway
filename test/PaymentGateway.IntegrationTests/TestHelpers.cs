@@ -13,7 +13,6 @@ namespace PaymentGateway.IntegrationTests
         private static MakePaymentV1 GetValidMakePaymentV1()
             => new MakePaymentV1
             {
-                CardHolder = "a card holder",
                 CardNumber = "12345678",
                 Cvv = "123",
                 ExpiryYear = DateTime.Today.Year + 1,

@@ -80,7 +80,6 @@ namespace Acquirer.Client.UnitTests
 
         private static CreatePayment GetCreatePayment()
             => new CreatePayment(
-                cardHolder: "a card holder",
                 cardNumber: "a card number",
                 cvv: "123",
                 expiryYear: 2029,

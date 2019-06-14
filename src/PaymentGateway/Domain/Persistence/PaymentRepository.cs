@@ -26,25 +26,23 @@ namespace PaymentGateway.Domain.Persistence
             var paymentEntity = db[key];
             return await Task.FromResult(Some(new PaymentDetails(
                 key, 
-                paymentEntity.CardHolder,
                 paymentEntity.CardNumber,
                 paymentEntity.ExpiryYear,
                 paymentEntity.ExpiryMonth,
-                paymentEntity.ProcessedStatus)));
+                paymentEntity.IsPaymentSuccessful)));
         }
 
         public async Task<SavePaymentResult> Save(ProcessedPayment processedPayment)
         {
             var paymentEntity = new PaymentEntity(
                 identityGenerator.NewId,
-                processedPayment.CardHolder,
                 processedPayment.CardNumber,
                 processedPayment.ExpiryYear,
                 processedPayment.ExpiryMonth,
                 processedPayment.Amount,
                 processedPayment.Currency,
                 processedPayment.AcquirerPaymentId,
-                processedPayment.ProcessedStatus);
+                processedPayment.IsPaymentSuccessful);
             db.Add(paymentEntity.Key, paymentEntity);
             return await Task.FromResult(new SavePaymentResult(paymentEntity.Key));
         }

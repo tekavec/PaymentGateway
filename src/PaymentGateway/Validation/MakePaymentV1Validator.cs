@@ -13,12 +13,6 @@ namespace PaymentGateway.Validation
 
         public MakePaymentV1Validator(IClock clock)
         {
-            RuleFor(x => x.CardHolder)
-                .NotEmpty()
-                .Matches("^.{1,161}$")
-                .WithName(c => nameof(c.CardHolder))
-                .WithMessage("Must have 1 to 161 characters.");
-
             RuleFor(x => x.CardNumber)
                 .NotEmpty()
                 .Matches("^\\d{8,19}$")

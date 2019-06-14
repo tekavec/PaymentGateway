@@ -40,7 +40,7 @@ namespace PaymentGateway.UnitTests.Domain.ProcessPayment
 
             result.Should().BeOfType<PaymentProcessingResult>();
             result.Key.Should().Be(savePaymentResult.Key);
-            result.Status.Should().Be(true);
+            result.IsPaymentSuccessful.Should().Be(true);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace PaymentGateway.UnitTests.Domain.ProcessPayment
 
             result.Should().BeOfType<PaymentProcessingResult>();
             result.Key.Should().Be(savePaymentResult.Key);
-            result.Status.Should().Be(false);
+            result.IsPaymentSuccessful.Should().Be(false);
         }
     }
 }

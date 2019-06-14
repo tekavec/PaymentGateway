@@ -20,28 +20,6 @@ namespace PaymentGateway.UnitTests.Validation
         }
 
         [Theory]
-        [InlineData(null, "Null is invalid card holder")]
-        [InlineData("", "Empty string is invalid card holder")]
-        public void validate_invalid_card_holder(string cardHolder, string because)
-        {
-            validator.ShouldHaveValidationErrorFor(a => a.CardHolder, cardHolder);
-        }
-
-        [Fact]
-        public void validate_too_long_card_holder()
-        {
-            validator.ShouldHaveValidationErrorFor(a => a.CardHolder, new string('a', 162));
-        }
-
-        [Theory]
-        [InlineData("a")]
-        [InlineData("0")]
-        public void validate_valid_card_holder(string cardHolder)
-        {
-            validator.ShouldNotHaveValidationErrorFor(a => a.CardHolder, cardHolder);
-        }
-
-        [Theory]
         [InlineData(null, "Null is invalid card number")]
         [InlineData("", "Empty string is invalid card number")]
         [InlineData("1234567", "Less than 8 digits is invalid card number")]

@@ -54,7 +54,7 @@ namespace PaymentGateway.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task return_bad_request_for_invalid_input_payment_data()
+        public async Task return_400BadRequest_for_invalid_input_payment_data()
         {
             controllerContext.ModelState.AddModelError("Request", "Invalid");
 
@@ -63,9 +63,8 @@ namespace PaymentGateway.UnitTests.Controllers
             result.Should().BeOfType<BadRequestObjectResult>();
         }
 
-
         [Fact]
-        public async Task return_server_error_500_if_exception_was_thrown_during_processing()
+        public async Task return_server_error_500InternalServerError_if_exception_was_thrown_during_processing()
         {
             processPaymentService.Setup(a => a.Process(It.IsAny<CreatePayment>())).ThrowsAsync(new Exception());
 
@@ -88,7 +87,7 @@ namespace PaymentGateway.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task return_not_found_404_if_payment_details_are_not_found()
+        public async Task return_not_found_404NotFound_if_payment_details_are_not_found()
         {
             var paymentId = Guid.NewGuid();
             retrievePaymentService.Setup(a => a.Get(paymentId)).ReturnsAsync(F.None);
@@ -99,7 +98,17 @@ namespace PaymentGateway.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task return_server_error_500_if_exception_was_thrown_during_payment_retrieving()
+        public async Task return_400BadRequest_for_invalid_input_payment_id()
+        {
+            controllerContext.ModelState.AddModelError("Request", "Invalid");
+
+            var result = await paymentController.Get(Guid.NewGuid());
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task return_server_error_500InternalServerError_if_exception_was_thrown_during_payment_retrieving()
         {
             var paymentId = Guid.NewGuid();
             retrievePaymentService.Setup(a => a.Get(paymentId)).ThrowsAsync(new Exception());

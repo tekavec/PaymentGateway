@@ -28,7 +28,6 @@ namespace PaymentGateway.Domain.ProcessPayment
             var acquirerProcessingResult = await acquirerClient.ProcessPayment(createPayment);
             var savePaymentResult = await savePaymentRepository.Save(
                 new ProcessedPayment(
-                    createPayment.CardHolder,
                     createPayment.CardNumber,
                     createPayment.ExpiryYear,
                     createPayment.ExpiryMonth,

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Acquirer.Client.Domain;
 using LaYumba.Functional;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Domain.ProcessPayment;
@@ -37,6 +38,9 @@ namespace PaymentGateway.Controllers
         /// <param name="command">Payment data</param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(typeof(PaymentProcessingResult), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Post([FromBody] MakePaymentV1 command)
         {
             logger.LogInformation("Start processing new payment.");
@@ -50,7 +54,7 @@ namespace PaymentGateway.Controllers
                         logger.LogError(ex, Errors.UnexpectedError.Message);
                         return StatusCode(500, Errors.UnexpectedError);
                     },
-                    Completed: result => CreatedAtAction("Get", new { id = result.Key}, new PaymentProcessingResult(result.Key, result.Status)));
+                    Completed: result => CreatedAtAction("Get", new { id = result.Key}, new PaymentProcessingResult(result.Key, result.IsPaymentSuccessful)));
             logger.LogInformation("Exit processing new payment.");
             return processingResult;
         }
@@ -61,6 +65,10 @@ namespace PaymentGateway.Controllers
         /// <param name="id">Unique identifier of previously processed payment.</param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PaymentDetails), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(Guid id)
         {
             logger.LogInformation("Start retrieving payment details for payment id={id}.", id);
@@ -91,7 +99,6 @@ namespace PaymentGateway.Controllers
         private static CreatePayment GetCreatePayment(MakePaymentV1 model)
         {
             return new CreatePayment(
-                model.CardHolder,
                 model.CardNumber,
                 model.Cvv,
                 (int)model.ExpiryYear,

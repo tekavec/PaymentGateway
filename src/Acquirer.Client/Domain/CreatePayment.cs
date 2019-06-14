@@ -3,7 +3,6 @@
     public sealed class CreatePayment
     {
         public CreatePayment(
-            string cardHolder,
             string cardNumber,
             string cvv,
             int expiryYear,
@@ -11,7 +10,6 @@
             decimal amount,
             string currency)
         {
-            CardHolder = cardHolder;
             CardNumber = cardNumber;
             Cvv = cvv;
             ExpiryYear = expiryYear;
@@ -20,7 +18,6 @@
             Currency = currency;
         }
 
-        public string CardHolder { get; }
         public string CardNumber { get; }
         public string Cvv { get; }
         public int ExpiryYear { get; }

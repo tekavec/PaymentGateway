@@ -22,7 +22,6 @@ namespace Acquirer.Client
         {
             var acquirerPayment = new AcquirerPaymentDto
             {
-                CardHolder = createPayment.CardHolder,
                 CardNumber = createPayment.CardNumber,
                 Cvv = createPayment.Cvv,
                 ExpiryYear = createPayment.ExpiryYear,
