@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace PaymentGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(Configuration);
+            services.AddResponseCaching();
             services.RegisterSwaggerGeneration();
             services.RegisterValidators();
             services.RegisterDependencies();
@@ -68,6 +70,8 @@ namespace PaymentGateway
                 counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
                 return next();
             });
+
+            app.UseResponseCaching();
             app.UseMvc();
         }
     }

@@ -69,6 +69,7 @@ namespace PaymentGateway.Controllers
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ResponseCache(Duration = 10, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> Get(Guid id)
         {
             logger.LogInformation("Start retrieving payment details for payment id={id}.", id);
