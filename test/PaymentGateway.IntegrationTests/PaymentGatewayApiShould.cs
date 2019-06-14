@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using PaymentGateway.Infrastructure.Security;
+using PaymentGateway.Models;
 using Xunit;
 using static PaymentGateway.IntegrationTests.TestHelpers;
 
@@ -88,14 +90,16 @@ namespace PaymentGateway.IntegrationTests
         }
 
         [Fact]
-        public async Task return_200OK_when_retrieving_previously_created_payment()
+        public async Task return_200OK_and_return_masked_card_number_when_retrieving_previously_created_payment()
         {
+            var cardNumber = "12345678";
             await AuthorizeClient();
             var defaultPage = await authorizedClient.GetAsync("/payment");
+            var makePaymentV1 = GetValidMakePaymentV1Json(cardNumber);
             var request = new HttpRequestMessage(HttpMethod.Post, defaultPage.RequestMessage.RequestUri)
             {
                 Content = new StringContent(
-                    GetValidMakePaymentV1Json(), 
+                    makePaymentV1, 
                     Encoding.UTF8, 
                     "application/json")
             };
@@ -106,6 +110,11 @@ namespace PaymentGateway.IntegrationTests
             var result = await authorizedClient.GetAsync(createPaymentResponse.Headers.Location.PathAndQuery);
 
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
+
+            var contentString = (await result.Content.ReadAsStringAsync());
+            var paymentDetail = JsonConvert.DeserializeObject<PaymentDetails>(contentString);
+            paymentDetail.CardNumber.Should().Be("******5678");
+
         }
 
         private async Task AuthorizeClient()

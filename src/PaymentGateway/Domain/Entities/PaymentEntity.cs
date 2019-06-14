@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PaymentGateway.Domain.Persistence
+namespace PaymentGateway.Domain.Entities
 {
     public class PaymentEntity : Entity<Guid>
     {

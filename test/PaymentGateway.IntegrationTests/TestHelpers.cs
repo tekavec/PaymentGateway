@@ -7,13 +7,13 @@ namespace PaymentGateway.IntegrationTests
 {
     public static class TestHelpers
     {
-        public static string GetValidMakePaymentV1Json()
-            => JsonConvert.SerializeObject(GetValidMakePaymentV1(), DefaultJsonSerializerSetting());
+        public static string GetValidMakePaymentV1Json(string cardNumber = "12345678")
+            => JsonConvert.SerializeObject(GetValidMakePaymentV1(cardNumber), DefaultJsonSerializerSetting());
 
-        private static MakePaymentV1 GetValidMakePaymentV1()
+        private static MakePaymentV1 GetValidMakePaymentV1(string cardNumber)
             => new MakePaymentV1
             {
-                CardNumber = "12345678",
+                CardNumber = cardNumber,
                 Cvv = "123",
                 ExpiryYear = DateTime.Today.Year + 1,
                 ExpiryMonth = 12,

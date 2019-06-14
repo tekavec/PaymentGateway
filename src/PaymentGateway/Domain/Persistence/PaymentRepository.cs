@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LaYumba.Functional;
+using PaymentGateway.Domain.Entities;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Models;
 using static LaYumba.Functional.F;

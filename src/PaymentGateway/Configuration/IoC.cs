@@ -4,6 +4,8 @@ using System.Reflection;
 using Acquirer.Client;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PaymentGateway.Domain;
+using PaymentGateway.Domain.Entities;
 using PaymentGateway.Domain.Persistence;
 using PaymentGateway.Domain.ProcessPayment;
 using PaymentGateway.Domain.RetrievePayment;

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using LaYumba.Functional;
 using Moq;
+using PaymentGateway.Domain.Entities;
 using PaymentGateway.Domain.Persistence;
 using Xunit;
 using Xunit.Sdk;

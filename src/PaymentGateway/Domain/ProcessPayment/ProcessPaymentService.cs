@@ -3,11 +3,13 @@ using Acquirer.Client;
 using Acquirer.Client.Domain;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Domain.Persistence;
+using PaymentGateway.Models;
 
 namespace PaymentGateway.Domain.ProcessPayment
 {
     public class ProcessPaymentService : IProcessPaymentService
     {
+        private const int NumberOfUnmaskedCreditNumberDigits = 4;
         private readonly IAcquirerClient acquirerClient;
         private readonly ISavePaymentRepository savePaymentRepository;
         private readonly ILogger<ProcessPaymentService> logger;
@@ -28,7 +30,7 @@ namespace PaymentGateway.Domain.ProcessPayment
             var acquirerProcessingResult = await acquirerClient.ProcessPayment(createPayment);
             var savePaymentResult = await savePaymentRepository.Save(
                 new ProcessedPayment(
-                    createPayment.CardNumber,
+                    createPayment.CardNumber.MaskAllExceptLast(NumberOfUnmaskedCreditNumberDigits),
                     createPayment.ExpiryYear,
                     createPayment.ExpiryMonth,
                     createPayment.Amount,

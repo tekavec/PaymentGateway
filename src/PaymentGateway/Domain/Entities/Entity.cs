@@ -1,4 +1,4 @@
-﻿namespace PaymentGateway.Domain
+﻿namespace PaymentGateway.Domain.Entities
 {
     public abstract class Entity<TKey>
     {

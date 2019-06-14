@@ -101,7 +101,8 @@ namespace PaymentGateway.UnitTests.Controllers
         public async Task return_400BadRequest_for_invalid_input_payment_id()
         {
             controllerContext.ModelState.AddModelError("Request", "Invalid");
-
+            retrievePaymentService.Setup(a => a.Get(It.IsAny<Guid>())).ReturnsAsync(F.None);
+            
             var result = await paymentController.Get(Guid.NewGuid());
 
             result.Should().BeOfType<BadRequestObjectResult>();
