@@ -73,6 +73,9 @@ namespace PaymentGateway.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             logger.LogInformation("Start retrieving payment details for payment id={id}.", id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var paymentDetails = await retrievePaymentService.Get(id)
                 .Map(
                     Faulted: ex =>

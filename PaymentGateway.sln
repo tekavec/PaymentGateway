@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		docker-compose.test.yml = docker-compose.test.yml
 		docker-compose.yml = docker-compose.yml
 		Makefile = Makefile
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Acquirer.Client", "src\Acquirer.Client\Acquirer.Client.csproj", "{C28BC4C2-D6F4-42C8-AF5E-C1294AC09E54}"
